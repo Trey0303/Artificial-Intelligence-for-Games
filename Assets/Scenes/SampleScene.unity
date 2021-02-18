@@ -312,6 +312,7 @@ MonoBehaviour:
   maxSpeed: 3
   maxForce: 5
   seekTarget: {fileID: 1136284754}
+  fleeTarget: {fileID: 1019709224}
 --- !u!114 &480326342
 MonoBehaviour:
   m_ObjectHideFlags: 0

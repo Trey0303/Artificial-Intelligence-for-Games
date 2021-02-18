@@ -14,11 +14,12 @@ public class AISteeringController : MonoBehaviour
     public float maxForce = 5.0f;//limits the scale of force thats applied to velocity
 
     public Transform seekTarget;
+    public Transform fleeTarget;
 
     public void Start()
     {
         steerings.Add(new SeekSteering { target = seekTarget });//seeks target
-        steerings.Add(new FleeSteering { target = seekTarget });//flees target
+        steerings.Add(new FleeSteering { target = fleeTarget });//flees target
     }
 
     private void Update()
@@ -51,7 +52,6 @@ public class AISteeringController : MonoBehaviour
     }
 
 }
-
 
 //overriding derived types, returns a Vector3 which is the desired velocity of what it wants
 public class SteeringBehavior
