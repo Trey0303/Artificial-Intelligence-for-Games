@@ -17,8 +17,8 @@ public class AISteeringController : MonoBehaviour
 
     public void Start()
     {
-        //steerings.Add(new SeekSteering { target = seekTarget });
-        flee.Add(new FleeSteering { target = seekTarget });
+        steerings.Add(new SeekSteering { target = seekTarget });//seeks target
+        flee.Add(new FleeSteering { target = seekTarget });//flees target
     }
 
     private void Update()
