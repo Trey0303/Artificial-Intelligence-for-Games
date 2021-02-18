@@ -17,7 +17,8 @@ public class AISteeringController : MonoBehaviour
 
     public void Start()
     {
-        steerings.Add(new SeekSteering { target = seekTarget });
+        //steerings.Add(new SeekSteering { target = seekTarget });
+        flee.Add(new FleeSteering { target = seekTarget });
     }
 
     private void Update()
@@ -31,6 +32,7 @@ public class AISteeringController : MonoBehaviour
 
     //add behaviors to this to consider them when calculating steering forces
     protected List<SteeringBehavior> steerings = new List<SteeringBehavior>();//adds a list of SteeringBehaviors(to combine everything together)
+    protected List<FleeSteeringBehavior> flee = new List<FleeSteeringBehavior>();
 
     //returns a Vector3 indicating the steering force to apply to our velocity
     protected Vector3 CalculateSteeringForce()//Vector3 calculates steering force
@@ -70,4 +72,26 @@ public class SeekSteering : SteeringBehavior
     }
 
     
+}
+
+//FleeSteering
+public class FleeSteeringBehavior
+{
+    public virtual Vector3 Flee(AISteeringController controller)
+    {
+        return Vector3.zero;//default will return zero
+    }
+}
+
+public class FleeSteering : FleeSteeringBehavior
+{
+    public Transform target;//set a target to go towards
+    public override Vector3 Flee(AISteeringController controller)//override to return the difference between the target position instead of the default zero
+    {
+        //(controller postion - target position) instead of (target position - controller postion) for fleeStering behavior
+        return (controller.transform.position - target.position).normalized/*normalize to get direction*/ * controller.maxSpeed;//multiply it by max speed
+
+    }
+
+
 }
