@@ -311,8 +311,10 @@ MonoBehaviour:
   agent: {fileID: 480326342}
   maxSpeed: 3
   maxForce: 5
+  wanderRadius: 5
   seekTarget: {fileID: 1136284754}
   fleeTarget: {fileID: 1019709224}
+  wanderTarget: {fileID: 0}
 --- !u!114 &480326342
 MonoBehaviour:
   m_ObjectHideFlags: 0
