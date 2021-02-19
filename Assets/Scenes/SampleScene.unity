@@ -312,9 +312,10 @@ MonoBehaviour:
   maxSpeed: 3
   maxForce: 5
   wanderRadius: 5
+  wanderDistance: 10
   seekTarget: {fileID: 1136284754}
   fleeTarget: {fileID: 1019709224}
-  wanderTarget: {fileID: 0}
+  wanderTarget: {fileID: 1136284754}
 --- !u!114 &480326342
 MonoBehaviour:
   m_ObjectHideFlags: 0

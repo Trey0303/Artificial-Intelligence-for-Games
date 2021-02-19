@@ -12,27 +12,13 @@ public class AISteeringController : MonoBehaviour
     [Header("Steering Settings")]
     public float maxSpeed = 3.0f;//limits the speed that agent will be moving at
     public float maxForce = 5.0f;//limits the scale of force thats applied to velocity
-    public float wanderRadius = 5.0f;
+    public float wanderRadius = 10.0f;
+    public float wanderDistance = 10.0f;
 
     public Transform seekTarget;
     public Transform fleeTarget;
     public Transform wanderTarget;
 
-    public void Start()
-    {
-        steerings.Add(new SeekSteering { target = seekTarget });//seeks target
-        steerings.Add(new FleeSteering { target = fleeTarget });//flees target
-        steerings.Add(new WanderBehavior { target = wanderTarget });//wanders
-    }
-
-    private void Update()
-    {
-        Vector3 steeringForce = CalculateSteeringForce();
-        //add steering force to velocity -- clamp its magnatude w/ respect to maxSpeed
-        agent.velocity = Vector3.ClampMagnitude(agent.velocity + steeringForce, maxSpeed);// agent velocity + steeringForce, 
-                                                                                          //if agent velocity + steeringForce is greater than maxSpeed it will shink it down to the maxSpeed
-        agent.UpdateMovement();
-    }
 
     //everything should revolve around SteeringBehavior(SteeringBehavior is treated like a parent or a main class for subclasses)
     //add behaviors to this to consider them when calculating steering forces
@@ -54,6 +40,31 @@ public class AISteeringController : MonoBehaviour
         return steeringForce;
     }
 
+    WanderBehavior wander;
+
+    public void Start()
+    {
+        steerings.Add(new SeekSteering { target = seekTarget });//seeks target
+        steerings.Add(new FleeSteering { target = fleeTarget });//flees target
+
+        wander = new WanderBehavior { radius = wanderRadius, distance = wanderDistance };//wanders
+        steerings.Add(wander);
+
+
+    }
+
+    private void Update()
+    {
+        wander.radius = wanderRadius;
+        wander.distance = wanderDistance;
+
+        Vector3 steeringForce = CalculateSteeringForce();
+        //add steering force to velocity -- clamp its magnatude w/ respect to maxSpeed
+        agent.velocity = Vector3.ClampMagnitude(agent.velocity + steeringForce, maxSpeed);// agent velocity + steeringForce, 
+                                                                                          //if agent velocity + steeringForce is greater than maxSpeed it will shink it down to the maxSpeed
+        agent.transform.forward = agent.velocity;
+        agent.UpdateMovement();
+    }
 }
 
 //overriding derived types, returns a Vector3 which is the desired velocity of what it wants
@@ -99,20 +110,26 @@ public class FleeSteering : SteeringBehavior
 //WanderBehavior
 public class WanderBehavior : SteeringBehavior
 {
-    public Transform target;
+    public float radius = 5.0f;
+    public float distance = 8.0f;
 
     public override Vector3 Steer(AISteeringController controller)//override to return the difference between the target position instead of the default zero
     {
         //start with a random target on the edge of the sphere with a set radius around the agent
         //You can add Random.onUnitSphere to the agent's position
         //Random.onUnitSphere generates a random point on a sphere -- to have it work with different radii, scale the random value by your radius
-        Vector3 randomTargetAroundAgent = controller.transform.position/*gets position of agent*/ + Random.onUnitSphere/*creates a random sphere radius*/ * controller.wanderRadius/*max radius of sphere*/;
+        Vector3 offset = Random.onUnitSphere * radius;//sets values to random
+        offset.y = 0.0f;//sets y to zero so that only x and z changes
+        offset += controller.transform.forward * distance;
+        Debug.DrawRay(controller.transform.position, offset);//visually shows the wander function working
+
+        Vector3 randomTargetAroundAgent = controller.transform.position/*gets position of agent*/ + offset/*creates a random sphere radius*/ * radius/*max radius of sphere*/;
 
         //add a randomised vector to the target, with a magnitude specified by a jitter amount
         
 
         //bring the target back to the radius of the sphere by normalising it and scaling by the radius
-        return (randomTargetAroundAgent/*target radius*/).normalized * controller.wanderRadius/*radius*/;
+        return (randomTargetAroundAgent - controller.transform.position).normalized * controller.maxSpeed/*radius*/;
 
         //add the agents heading, multiplied by a distance to the target
 
