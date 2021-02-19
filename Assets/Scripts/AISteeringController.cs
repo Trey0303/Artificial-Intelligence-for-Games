@@ -118,3 +118,25 @@ public class WanderBehavior : SteeringBehavior
 
     }
 }
+
+//pursueSteering
+
+/*
+Create a new class called PursueSteering that encapsulates the pursuit behavior. 
+Pursuing an object is similar to seeking towards an object, but there's an additional step involved. 
+
+Instead of trailing behind our target all of the time, we will instead try to intercept the target by considering its velocity as well. 
+Since we need access to the velocity of the other object, let's designate our target as a Agent instead of a Transform.
+*/
+public class pursueBehavior : SteeringBehavior
+{
+    //designate our target as a Agent instead of a Transform
+    public Agent target;
+
+    //calculate the estimated position of our target
+    // - add its velocity to its position
+
+    //calculate a directional vector from your position toward the estimated position
+
+    //scale the directional vector by our maximum speed
+}
