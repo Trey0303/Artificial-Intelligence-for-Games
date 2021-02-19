@@ -18,7 +18,8 @@ public class AISteeringController : MonoBehaviour
     public Transform seekTarget;
     public Transform fleeTarget;
     public Transform wanderTarget;
-
+    public Agent pursueTarget;
+    public Agent evadeTarget;
 
     //everything should revolve around SteeringBehavior(SteeringBehavior is treated like a parent or a main class for subclasses)
     //add behaviors to this to consider them when calculating steering forces
@@ -44,13 +45,14 @@ public class AISteeringController : MonoBehaviour
 
     public void Start()
     {
-        steerings.Add(new SeekSteering { target = seekTarget });//seeks target
-        steerings.Add(new FleeSteering { target = fleeTarget });//flees target
+        //steerings.Add(new SeekSteering { target = seekTarget });//seeks target
+        //steerings.Add(new FleeSteering { target = fleeTarget });//flees target
 
         wander = new WanderBehavior { radius = wanderRadius, distance = wanderDistance };//wanders
         steerings.Add(wander);
 
-
+        steerings.Add(new pursueBehavior { target = pursueTarget });//pursue target
+        steerings.Add(new evadeBehavior { target = evadeTarget });
     }
 
     private void Update()
@@ -147,13 +149,38 @@ Since we need access to the velocity of the other object, let's designate our ta
 */
 public class pursueBehavior : SteeringBehavior
 {
-    //designate our target as a Agent instead of a Transform
+    //designate our target as a Agent instead of a Transform so we can access the velocity of other objects
     public Agent target;
 
-    //calculate the estimated position of our target
-    // - add its velocity to its position
 
-    //calculate a directional vector from your position toward the estimated position
+    public override Vector3 Steer(AISteeringController controller)
+    {
+        //calculate the estimated position of our target
+        // - add its velocity to its position
+        Vector3 estimatedPosition = target.velocity + target.transform.position;
 
-    //scale the directional vector by our maximum speed
+        //calculate a directional vector from your position toward the estimated position
+        return (estimatedPosition - controller.transform.position).normalized/*normalize to get direction*/ * controller.maxSpeed;//scale the directional vector by our maximum speed
+
+
+    }
+}
+
+public class evadeBehavior : SteeringBehavior
+{
+    //designate our target as a Agent instead of a Transform so we can access the velocity of other objects
+    public Agent target;
+
+
+    public override Vector3 Steer(AISteeringController controller)
+    {
+        //calculate the estimated position of our target
+        // - add its velocity to its position
+        Vector3 estimatedPosition = target.velocity + target.transform.position;
+
+        //calculate a directional vector from your position toward the estimated position
+        return (controller.transform.position - estimatedPosition).normalized/*normalize to get direction*/ * controller.maxSpeed;//scale the directional vector by our maximum speed
+
+
+    }
 }
