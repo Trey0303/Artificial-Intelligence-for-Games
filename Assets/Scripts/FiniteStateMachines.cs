@@ -30,6 +30,7 @@ public class FiniteStateMachines : MonoBehaviour
     [SerializeField]
     private Transform seekTarget;
     public float detectionRadius = 2.0f;
+    public float giveupRadius = 5.0f;
 
     // Update is called once per frame
     private void Update()
@@ -75,13 +76,23 @@ public class FiniteStateMachines : MonoBehaviour
 
         }
         //have we noticed out target?
-        if((seekTarget.position - agent.transform.position).magnitude < detectionRadius){//if less tahn 2.0f radius
+        if((seekTarget.position - agent.transform.position).magnitude < detectionRadius){//if less than 2.0f radius
             currentState = States.Seek;
         }
     }
     void Seek()
     {
+        Vector3 curPos = agent.transform.position;
+        Vector3 goalPos = seekTarget.transform.position;
 
+        agent.velocity = (goalPos - curPos).normalized * speed;
+        agent.UpdateMovement();
+
+        //have we noticed out target?
+        if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than 5.0f radius
+        {
+            currentState = States.Patrol;
+        }
     }
     void Attack()
     {
