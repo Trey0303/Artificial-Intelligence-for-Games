@@ -1527,7 +1527,7 @@ MonoBehaviour:
   seekTarget: {fileID: 1136284754}
   fleeTarget: {fileID: 1019709224}
   wanderTarget: {fileID: 1136284754}
-  pursueTarget: {fileID: 1136284749}
+  pursueTarget: {fileID: 0}
   evadeTarget: {fileID: 1019709226}
 --- !u!114 &1730505677
 MonoBehaviour:
