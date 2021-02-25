@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class DjikstraAlgorithm : MonoBehaviour
 {
-    //Build Phase
-    public int gridWidth;
-    public int gridHeight;
+    //Tile Generation
+    public int gridWidth;//set grid width spawn
+    public int gridHeight;//set grid height spawn
 
-    public GameObject prefab;
+    public GameObject prefab;//set a gameobject to create
 
-    public Tile[] tiles;
+    public Tile[] tiles;//to create an array of tiles
 
     private void Start()
     {
-        tiles = new Tile[gridWidth * gridHeight];
+        tiles = new Tile[gridWidth * gridHeight];//set array to grid
 
-        Vector3 offset = Vector3.zero;
+        Vector3 offset = Vector3.zero;//create an offset an set to zero
 
         // spawn the tiles
         for (int i = 0; i < gridHeight; ++i)
         {
-            for (int j = 0; j < gridWidth; ++j)
+            for (int j = 0; j < gridWidth; ++j)//goes through grid a set number of times before going on to the next row on grid height
             {
-                GameObject newTile = Instantiate(prefab, transform.position + offset, transform.rotation);
-                tiles[i * gridWidth + j] = newTile.GetComponent<Tile>();
-                offset.x += 1.0f;
+                GameObject newTile = Instantiate(prefab, transform.position + offset, transform.rotation);//create new tile
+                tiles[i * gridWidth + j] = newTile.GetComponent<Tile>();//add new tile to array
+                offset.x += 1.0f;//when ever an object spawns shift x by one to create a row
             }
 
-            offset.x = 0.0f;
-            offset.z += 1.0f;
+            offset.x = 0.0f;//starts on the left most object on grid to reset the offset
+            offset.z += 1.0f;//goes up the grid by 1(going to the next row) to create a column
         }
 
         // setup connections
@@ -64,41 +64,42 @@ public class DjikstraAlgorithm : MonoBehaviour
             //tiles[i].connectedTiles = connectedTiles.ToArray();
         }
     }
+    
+    //Path Generation
 
     private Tile GetCheapestTile(Tile[] arr)
     {
-        float bestGScore = float.MaxValue;
-        Tile bestTile = null;
+        float bestGScore = float.MaxValue;//initialize
+        Tile bestTile = null;//initialize
 
         for (int i = 0; i < tiles.Length; ++i)
         {
-            if (arr[i].gScore < bestGScore)
+            if (arr[i].gScore < bestGScore)//if current tile has the best score
             {
-                bestTile = arr[i];
-                bestGScore = arr[i].gScore;
+                bestTile = arr[i];//set to current index
+                bestGScore = arr[i].gScore;//set to current index score
             }
         }
 
         return bestTile;
     }
 
-    //Siege Phase
 
-    public Tile[] CalculatePath(Tile origin, Tile destination)
+    public Tile[] CalculatePath(Tile origin, Tile destination)// CalculatePath(start and end)
     {
-        List<Tile> openList = new List<Tile>();
-        List<Tile> closedList = new List<Tile>();
+        List<Tile> openList = new List<Tile>();//nodes that have NOT been traversed through
+        List<Tile> closedList = new List<Tile>();//nodes that have been traversed through
 
-        openList.Add(origin);
+        openList.Add(origin);//add starting tile 
 
         while (openList.Count != 0 &&               // still stuff left to explore
                !closedList.Contains(destination))   // AND we haven't reached the destination yet
         {
             // TODO: replace this with a proper sorted array implementation
             Tile current = GetCheapestTile(openList.ToArray());
-            openList.Remove(current);
+            openList.Remove(current);//remove current node from list
 
-            closedList.Add(current);
+            closedList.Add(current);//add current node to list
 
             // TODO...
             // calculate g scores for connected tiles
