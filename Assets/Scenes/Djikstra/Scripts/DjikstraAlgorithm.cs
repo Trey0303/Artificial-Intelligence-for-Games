@@ -12,6 +12,11 @@ public class DjikstraAlgorithm : MonoBehaviour
 
     public Tile[] tiles;//to create an array of tiles
 
+    public Tile debugStart;
+    public Tile debugEnd;
+
+    private Tile[] debugPath;
+
     private void Start()
     {
         tiles = new Tile[gridWidth * gridHeight];//set array to grid
@@ -61,7 +66,7 @@ public class DjikstraAlgorithm : MonoBehaviour
                 connectedTiles.Add(tiles[i - gridWidth]);
             }
 
-            //tiles[i].connectedTiles = connectedTiles.ToArray();
+            tiles[i].connectedTiles = connectedTiles.ToArray();
         }
     }
     
@@ -72,7 +77,7 @@ public class DjikstraAlgorithm : MonoBehaviour
         float bestGScore = float.MaxValue;//initialize
         Tile bestTile = null;//initialize
 
-        for (int i = 0; i < tiles.Length; ++i)
+        for (int i = 0; i < arr.Length; ++i)
         {
             if (arr[i].gScore < bestGScore)//if current tile has the best score
             {
@@ -82,6 +87,14 @@ public class DjikstraAlgorithm : MonoBehaviour
         }
 
         return bestTile;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))//visually shows calculatedPath
+        {
+            debugPath = CalculatePath(debugStart, debugEnd);
+        }
     }
 
 
@@ -102,6 +115,7 @@ public class DjikstraAlgorithm : MonoBehaviour
             // TODO: replace this with a proper sorted array implementation
             Tile current = GetCheapestTile(openList.ToArray());//update current
 
+
             openList.Remove(current);//remove current node from list
 
             closedList.Add(current);//add current node to list
@@ -109,7 +123,22 @@ public class DjikstraAlgorithm : MonoBehaviour
             // TODO...
             // calculate g scores for connected tiles
             //throw new System.NotImplementedException();
-            //current.gScore +=;//
+            for(int i = 0; i < current.connectedTiles.Length; ++i)//until it reaches the last connected tile
+            {
+                Tile adjTile = current.connectedTiles[i];//create adjTile and set to current connected tile
+
+                //int estGScore = current.gScore + 1;//store adjTile updated gScore
+                int calGScore = current.gScore + adjTile.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
+
+                if (adjTile.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
+                    calGScore < adjTile.gScore)//or estScore is less than current adjTile gScore
+                {
+                    adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
+                    //adjTile.gScore = estGScore;//current.gScore + 1(set adjTile updated gScore)
+                    adjTile.gScore = calGScore;//1 + 1
+                }
+                
+            }
         }
 
         // TODO: remove this when completed
