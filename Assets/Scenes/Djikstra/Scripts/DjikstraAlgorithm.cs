@@ -66,7 +66,7 @@ public class DjikstraAlgorithm : MonoBehaviour
                 connectedTiles.Add(tiles[i - gridWidth]);
             }
 
-            //tiles[i].connectedTiles = connectedTiles.ToArray();
+            tiles[i].connectedTiles = connectedTiles.ToArray();
         }
     }
     

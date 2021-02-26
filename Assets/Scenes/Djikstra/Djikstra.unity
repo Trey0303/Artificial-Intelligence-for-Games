@@ -3618,6 +3618,8 @@ MonoBehaviour:
   gridHeight: 5
   prefab: {fileID: 6023105661554673325, guid: b6ed695db0115c844899e9a2335736ac, type: 3}
   tiles: []
+  debugStart: {fileID: 0}
+  debugEnd: {fileID: 0}
 --- !u!4 &441307615
 Transform:
   m_ObjectHideFlags: 0
