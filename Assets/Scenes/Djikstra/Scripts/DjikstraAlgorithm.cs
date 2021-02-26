@@ -12,10 +12,10 @@ public class DjikstraAlgorithm : MonoBehaviour
 
     public Tile[] tiles;//to create an array of tiles
 
-    public Tile debugStart;
-    public Tile debugEnd;
+    //public Tile debugStart;
+    //public Tile debugEnd;
 
-    private Tile[] debugPath;
+    //private Tile[] debugPath;
 
     private void Start()
     {
@@ -30,6 +30,7 @@ public class DjikstraAlgorithm : MonoBehaviour
             {
                 GameObject newTile = Instantiate(prefab, transform.position + offset, transform.rotation);//create new tile
                 tiles[i * gridWidth + j] = newTile.GetComponent<Tile>();//add new tile to array
+                newTile.name = string.Format("{0}, {1}", i, j);//name tile on graph
                 offset.x += 1.0f;//when ever an object spawns shift x by one to create a row
             }
 
@@ -61,7 +62,7 @@ public class DjikstraAlgorithm : MonoBehaviour
             }
 
             // if we're not at the bottom-edge
-            if (i > gridWidth)
+            if (i > gridWidth - 1)
             {
                 connectedTiles.Add(tiles[i - gridWidth]);
             }
@@ -89,21 +90,29 @@ public class DjikstraAlgorithm : MonoBehaviour
         return bestTile;
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.G))//visually shows calculatedPath
+    //    {
+    //        debugPath = CalculatePath(debugStart, debugEnd);
+    //    }
+    //}
+
+    private void ResetNodes()
     {
-        if (Input.GetKeyDown(KeyCode.G))//visually shows calculatedPath
+        for(int i = 0; i < tiles.Length; ++i)
         {
-            debugPath = CalculatePath(debugStart, debugEnd);
+            tiles[i].gScore = 0;//set tiles gscore to zero
+            tiles[i].previousTile = null;//set previous tile to null
         }
     }
 
-
     public Tile[] CalculatePath(Tile origin, Tile destination)// CalculatePath(start and end)
     {
+        ResetNodes();//clear old data
+
         List<Tile> openList = new List<Tile>();//nodes that have NOT been traversed through
         List<Tile> closedList = new List<Tile>();//nodes that have been traversed through
-
-        //int totalGScore = 0;
 
         openList.Add(origin);//add starting tile 
 
@@ -135,6 +144,11 @@ public class DjikstraAlgorithm : MonoBehaviour
                     adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
                     adjTile.gScore = calGScore;//
                 }
+
+                if(!closedList.Contains(adjTile) && !openList.Contains(adjTile))//if neither of theses lists have this tile
+                {
+                    openList.Add(adjTile);//add tile to openList
+                }
                 
             }
         }
@@ -156,17 +170,17 @@ public class DjikstraAlgorithm : MonoBehaviour
         return path.ToArray();
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        if (debugPath == null) { return; }
-        Gizmos.color = Color.blue;
+    //private void OnDrawGizmosSelected()
+    //{
+    //    if (debugPath == null) { return; }
+    //    Gizmos.color = Color.blue;
 
-        Vector3 drawOffset = new Vector3(0, 1.5f, 0.0f);
+    //    Vector3 drawOffset = new Vector3(0, 1.5f, 0.0f);
 
-        for (int i = 0; i < debugPath.Length - 1; ++i)
-        {
-            Gizmos.DrawLine(debugPath[i].transform.position + drawOffset, debugPath[i + 1].transform.position + drawOffset);
-        }
-    }
+    //    for (int i = 0; i < debugPath.Length - 1; ++i)
+    //    {
+    //        Gizmos.DrawLine(debugPath[i].transform.position + drawOffset, debugPath[i + 1].transform.position + drawOffset);
+    //    }
+    //}
 
 }

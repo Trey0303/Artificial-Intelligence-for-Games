@@ -9,6 +9,8 @@ public class Tile : MonoBehaviour
     public int gScore;//score
     public int cost = 1;//cost(hard-coded travel cost to 1)
 
+    public bool traversible = true;
+
     private void OnDrawGizmosSelected()//used to visually show selected object
     {
         if (connectedTiles == null) { return; }
