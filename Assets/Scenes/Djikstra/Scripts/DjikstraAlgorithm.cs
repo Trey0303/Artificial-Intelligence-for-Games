@@ -66,7 +66,7 @@ public class DjikstraAlgorithm : MonoBehaviour
                 connectedTiles.Add(tiles[i - gridWidth]);
             }
 
-            tiles[i].connectedTiles = connectedTiles.ToArray();
+            //tiles[i].connectedTiles = connectedTiles.ToArray();
         }
     }
     
@@ -127,24 +127,46 @@ public class DjikstraAlgorithm : MonoBehaviour
             {
                 Tile adjTile = current.connectedTiles[i];//create adjTile and set to current connected tile
 
-                //int estGScore = current.gScore + 1;//store adjTile updated gScore
                 int calGScore = current.gScore + adjTile.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
 
                 if (adjTile.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
                     calGScore < adjTile.gScore)//or estScore is less than current adjTile gScore
                 {
                     adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
-                    //adjTile.gScore = estGScore;//current.gScore + 1(set adjTile updated gScore)
-                    adjTile.gScore = calGScore;//1 + 1
+                    adjTile.gScore = calGScore;//
                 }
                 
             }
         }
 
-        // TODO: remove this when completed
-        return null;
+        List<Tile> path = new List<Tile>();//create list
+
+        if (closedList.Contains(destination))//if closedList destination was reached
+        {
+            Tile prevTile = destination;//start at the end of closedList
+            while (prevTile != origin)//while on not at the start of closedList
+            {
+                path.Add(prevTile);//add a previous tile 
+                prevTile = prevTile.previousTile;//update previous tile so that it can be added the next loop
+            }
+            path.Add(prevTile);//add origin/start/first node to the end of the list
+        }
+
+        path.Reverse();//reverses path order
+        return path.ToArray();
     }
 
-    
+    private void OnDrawGizmosSelected()
+    {
+        if (debugPath == null) { return; }
+        Gizmos.color = Color.blue;
+
+        Vector3 drawOffset = new Vector3(0, 1.5f, 0.0f);
+
+        for (int i = 0; i < debugPath.Length - 1; ++i)
+        {
+            Gizmos.DrawLine(debugPath[i].transform.position + drawOffset, debugPath[i + 1].transform.position + drawOffset);
+        }
+    }
 
 }

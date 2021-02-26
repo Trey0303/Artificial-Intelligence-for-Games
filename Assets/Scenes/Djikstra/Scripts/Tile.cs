@@ -9,11 +9,11 @@ public class Tile : MonoBehaviour
     public int gScore;//score
     public int cost = 1;//cost(hard-coded travel cost to 1)
 
-    private void OnDrawGizmosSelected()//used to visually show calculatedPath
+    private void OnDrawGizmosSelected()//used to visually show selected object
     {
         if (connectedTiles == null) { return; }
 
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.green;//set the color
 
         Vector3 drawOffset = new Vector3(0, 1.5f, 0.0f);
 
