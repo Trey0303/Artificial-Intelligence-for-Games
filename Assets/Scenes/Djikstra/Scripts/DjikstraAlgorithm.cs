@@ -90,20 +90,26 @@ public class DjikstraAlgorithm : MonoBehaviour
         List<Tile> openList = new List<Tile>();//nodes that have NOT been traversed through
         List<Tile> closedList = new List<Tile>();//nodes that have been traversed through
 
+        //int totalGScore = 0;
+
         openList.Add(origin);//add starting tile 
+
 
         while (openList.Count != 0 &&               // still stuff left to explore
                !closedList.Contains(destination))   // AND we haven't reached the destination yet
         {
+
             // TODO: replace this with a proper sorted array implementation
-            Tile current = GetCheapestTile(openList.ToArray());
+            Tile current = GetCheapestTile(openList.ToArray());//update current
+
             openList.Remove(current);//remove current node from list
 
             closedList.Add(current);//add current node to list
 
             // TODO...
             // calculate g scores for connected tiles
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            //current.gScore +=;//
         }
 
         // TODO: remove this when completed

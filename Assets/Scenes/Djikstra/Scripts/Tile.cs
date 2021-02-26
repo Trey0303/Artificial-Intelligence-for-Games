@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public Tile previousTile;
-    public int gScore;//cost
+    public Tile previousTile;//keeps track of previous nodes
+    public int gScore;//score
+    public int cost = 1;//cost
 }
