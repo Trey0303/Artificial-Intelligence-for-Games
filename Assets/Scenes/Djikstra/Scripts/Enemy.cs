@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public Agent agent;
+    public Agent agent;//set an agent
 
     public State gameState { get; set; }
     private int targetPathIndex = 0;
@@ -26,11 +26,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDestroy()//will despawn enemy
     {
         if (gameState)
         {
-            --gameState.activeEnemies;
+            --gameState.activeEnemies;//removes enemy form activeEnemies
         }
     }
 }

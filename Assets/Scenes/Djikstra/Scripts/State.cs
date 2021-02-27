@@ -49,7 +49,7 @@ public class State : MonoBehaviour
     public void Setup()
     {
         int startIdx = (graph.gridHeight / 2) * graph.gridWidth;//sets a new int at the start of the graph
-        int endIdx = startIdx + graph.gridWidth - 1;//sets a new int at the end of the graph
+        int endIdx = startIdx + graph.gridWidth -1;//sets a new int at the end of the graph
 
         startTile = graph.tiles[startIdx];//sets startTile to the first tile using startIdx
         endTile = graph.tiles[endIdx];//sets endTile to the last tile at the end of the graph using endIdx
