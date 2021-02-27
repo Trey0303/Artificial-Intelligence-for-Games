@@ -48,17 +48,17 @@ public class State : MonoBehaviour
 
     public void Setup()
     {
-        int startIdx = (graph.gridHeight / 2) * graph.gridWidth;
-        int endIdx = startIdx + graph.gridWidth - 1;
+        int startIdx = (graph.gridHeight / 2) * graph.gridWidth;//sets a new int at the start of the graph
+        int endIdx = startIdx + graph.gridWidth - 1;//sets a new int at the end of the graph
 
-        startTile = graph.tiles[startIdx];
-        endTile = graph.tiles[endIdx];
+        startTile = graph.tiles[startIdx];//sets startTile to the first tile using startIdx
+        endTile = graph.tiles[endIdx];//sets endTile to the last tile at the end of the graph using endIdx
 
-        Instantiate(spawnPrefab, startTile.transform.position, Quaternion.identity);
-        GameObject defendInstance = Instantiate(defendPrefab, endTile.transform.position, Quaternion.identity);
+        Instantiate(spawnPrefab, startTile.transform.position, Quaternion.identity);//spawns enemy spawner at startTile position
+        GameObject defendInstance = Instantiate(defendPrefab, endTile.transform.position, Quaternion.identity);//spawns base at endTile position
         defendInstance.GetComponent<Base>().gameState = this;
 
-        enemyPath = graph.CalculatePath(startTile, endTile);
+        enemyPath = graph.CalculatePath(startTile, endTile);//uses CalculatePath function to make its way from enemy spawner to base/makes its way from startTile to endTile(startTile and endTile are used as start and end points)
 
         currentPhase = Phase.Build;
     }
@@ -80,16 +80,16 @@ public class State : MonoBehaviour
     // TODO: Refactor this to use of a more elegant FSM system
     private void Update()
     {
-        if (currentPhase == Phase.Build)
+        if (currentPhase == Phase.Build)//if in build phase
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))//if mouse click
             {
-                bool clicked = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);
+                bool clicked = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);//get mouse click position
                 if (!clicked) { return; }
 
                 if (hit.collider.gameObject.TryGetComponent<Tile>(out var tile))
                 {
-                    Instantiate(wallPrefab, tile.transform.position, tile.transform.rotation);
+                    Instantiate(wallPrefab, tile.transform.position, tile.transform.rotation);//spawn wall
                     tile.traversible = false;
 
                     enemyPath = graph.CalculatePath(startTile, endTile);
