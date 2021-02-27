@@ -60,7 +60,7 @@ public class State : MonoBehaviour
 
         enemyPath = graph.CalculatePath(startTile, endTile);//uses CalculatePath function to make its way from enemy spawner to base/makes its way from startTile to endTile(startTile and endTile are used as start and end points)
 
-        currentPhase = Phase.Build;
+        currentPhase = Phase.Build;//set current state to build
     }
 
     // Trigger the next wave
@@ -85,19 +85,19 @@ public class State : MonoBehaviour
             if (Input.GetMouseButtonDown(0))//if mouse click
             {
                 bool clicked = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);//get mouse click position
-                if (!clicked) { return; }
+                if (!clicked) { return; }//if nothing valid was clicked
 
-                if (hit.collider.gameObject.TryGetComponent<Tile>(out var tile))
+                if (hit.collider.gameObject.TryGetComponent<Tile>(out var tile))//if tile was clicked
                 {
                     Instantiate(wallPrefab, tile.transform.position, tile.transform.rotation);//spawn wall
-                    tile.traversible = false;
+                    tile.traversible = false;//set tile traversible to false so that enemies cant walk through wall
 
-                    enemyPath = graph.CalculatePath(startTile, endTile);
+                    enemyPath = graph.CalculatePath(startTile, endTile);//Update enemy path with new information
                 }
 
             }
         }
-        else if (currentPhase == Phase.Simulate)
+        else if (currentPhase == Phase.Simulate)//simulate phase
         {
             // still need to check spawns?
             if (spawnCountThisWave < spawnCountPerWave)
@@ -105,33 +105,33 @@ public class State : MonoBehaviour
                 spawnInterval -= Time.deltaTime;
                 if (spawnInterval <= 0.0f)
                 {
-                    GameObject newEnemy = Instantiate(enemyPrefab, startTile.transform.position, startTile.transform.rotation);
-                    spawnInterval += spawnTimer;
-                    ++spawnCountThisWave;
+                    GameObject newEnemy = Instantiate(enemyPrefab, startTile.transform.position, startTile.transform.rotation);//spawn enemy
+                    spawnInterval += spawnTimer;//spawn timer
+                    ++spawnCountThisWave;//will move on to the next enemy to spawn
 
                     newEnemy.GetComponent<Enemy>().gameState = this;
-                    ++activeEnemies;
+                    ++activeEnemies;//increases activeEnemies count by 1 because a new enemy has spawned
                 }
             }
 
             // failure check
-            if (livesRemaining <= 0)
+            if (livesRemaining <= 0)//if base has no health left
             {
-                currentPhase = Phase.Failure;
+                currentPhase = Phase.Failure;//switch to failure state
             }
             // success check
-            else if (spawnCountThisWave == spawnCountPerWave && activeEnemies == 0)
+            else if (spawnCountThisWave == spawnCountPerWave && activeEnemies == 0)//if all enemies where defeated
             {
-                currentPhase = Phase.Build;
+                currentPhase = Phase.Build;//switch back to build phase to prep for next wave
             }
         }
-        else if (currentPhase == Phase.Failure)
+        else if (currentPhase == Phase.Failure)//if in Failure Phase
         {
-            //failureCanvas.SetActive(true);
+            //failureCanvas.SetActive(true);//end game and show lose screen
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()//displays enemy path?
     {
         if (enemyPath == null) { return; }
 
