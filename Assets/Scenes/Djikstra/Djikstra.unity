@@ -3753,7 +3753,7 @@ MonoBehaviour:
     type: 3}
   wallPrefab: {fileID: 8835487789706819711, guid: 92b21546d2e35d9419e51324d0509b13,
     type: 3}
-  enemyPrefab: {fileID: 8197903074344011411, guid: de4990eee5e6a9d44b98680f3b80ad83,
+  enemyPrefab: {fileID: 198303951728090532, guid: 13691f4417f11be4eb5fa63e40d21caf,
     type: 3}
   spawnInterval: 0.75
   spawnCountPerWave: 10
