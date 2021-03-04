@@ -3751,7 +3751,7 @@ MonoBehaviour:
     type: 3}
   defendPrefab: {fileID: 8950650682870792104, guid: 17d7bf2b350ea5c4cb98a5f9fc5b713f,
     type: 3}
-  wallPrefab: {fileID: 8835487789706819711, guid: 92b21546d2e35d9419e51324d0509b13,
+  wallPrefab: {fileID: 2243574079240238477, guid: 92b21546d2e35d9419e51324d0509b13,
     type: 3}
   enemyPrefab: {fileID: 198303951728090532, guid: 13691f4417f11be4eb5fa63e40d21caf,
     type: 3}

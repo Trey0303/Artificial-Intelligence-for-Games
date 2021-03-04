@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2302071634234125836}
   - component: {fileID: 7891150086923534347}
-  - component: {fileID: 2684468645375672851}
-  - component: {fileID: 8969197281786929823}
-  - component: {fileID: 8292728923763818311}
+  - component: {fileID: 8890338430581514511}
+  - component: {fileID: 7325345136144107384}
+  - component: {fileID: 1351635487452535696}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -48,8 +48,8 @@ CapsuleCollider:
   m_Radius: 0.27385965
   m_Height: 1.0544064
   m_Direction: 1
-  m_Center: {x: -0.0027866364, y: 0.4971249, z: 0.0011930764}
---- !u!54 &2684468645375672851
+  m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!54 &8890338430581514511
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,7 +65,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8969197281786929823
+--- !u!114 &7325345136144107384
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,8 +77,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd4a16c9ed79d54695a85a63c7b3204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rbody: {fileID: 2684468645375672851}
---- !u!114 &8292728923763818311
+  rbody: {fileID: 8890338430581514511}
+--- !u!114 &1351635487452535696
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44bcfedb862b79845b59e882faa8cdeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 8969197281786929823}
+  agent: {fileID: 7325345136144107384}
   moveSpeed: 1
   value: 100
 --- !u!1 &297933438311858434
