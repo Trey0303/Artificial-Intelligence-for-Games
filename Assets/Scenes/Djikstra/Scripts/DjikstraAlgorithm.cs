@@ -132,24 +132,45 @@ public class DjikstraAlgorithm : MonoBehaviour
             // TODO...
             // calculate g scores for connected tiles
             //throw new System.NotImplementedException();
-            for(int i = 0; i < current.connectedTiles.Length; ++i)//until it reaches the last connected tile
+            //for(int i = 0; i < current.connectedTiles.Length; ++i)//until it reaches the last connected tile
+            //{
+            //    Tile adjTile = current.connectedTiles[i];//create adjTile and set to current connected tile
+
+            //    int calGScore = current.gScore + adjTile.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
+
+            //    if (!adjTile.traversible) { continue; }//if not traversable move on to next node
+
+            //    if (adjTile.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
+            //        calGScore < adjTile.gScore)//or estScore is less than current adjTile gScore
+            //    {
+            //        adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
+            //        adjTile.gScore = calGScore;
+            //    }
+
+            //    if(!closedList.Contains(adjTile) && !openList.Contains(adjTile))//if neither of theses lists have this tile
+            //    {
+            //        openList.Add(adjTile);//add tile to openList
+            //    }
+            //}
+
+            for (int i = 0; i < current.connectedTiles.Length; ++i)
             {
-                Tile adjTile = current.connectedTiles[i];//create adjTile and set to current connected tile
+                Tile adjTile = current.connectedTiles[i];
+                if (closedList.Contains(adjTile) || !adjTile.traversible) { continue; }
 
-                int calGScore = current.gScore + adjTile.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
+                int estGScore = current.gScore + 1;
 
-                if (adjTile.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
-                    calGScore < adjTile.gScore)//or estScore is less than current adjTile gScore
+                if (adjTile.previousTile == null ||
+                    estGScore < adjTile.gScore)
                 {
-                    adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
-                    adjTile.gScore = calGScore;//
+                    adjTile.previousTile = current;
+                    adjTile.gScore = estGScore;
                 }
 
-                if(!closedList.Contains(adjTile) && !openList.Contains(adjTile))//if neither of theses lists have this tile
+                if (!closedList.Contains(adjTile) && !openList.Contains(adjTile))
                 {
-                    openList.Add(adjTile);//add tile to openList
+                    openList.Add(adjTile);
                 }
-                
             }
         }
 
