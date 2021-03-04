@@ -33,8 +33,8 @@ public class State : MonoBehaviour
 
     public Tile[] enemyPath { get; private set; }//enemy path?
 
-    //[Header("User Interface")]
-    //public GameObject failureCanvas;
+    [Header("User Interface")]
+    public GameObject failureCanvas;
 
     //phases/states
     public enum Phase
@@ -73,8 +73,8 @@ public class State : MonoBehaviour
 
     public void Start()
     {
-        // Disable the failure canvas (just in case we left it active)
-        //failureCanvas.SetActive(false);
+        //Disable the failure canvas (just in case we left it active)
+        failureCanvas.SetActive(false);
     }
 
     // TODO: Refactor this to use of a more elegant FSM system
@@ -127,7 +127,7 @@ public class State : MonoBehaviour
         }
         else if (currentPhase == Phase.Failure)//if in Failure Phase
         {
-            //failureCanvas.SetActive(true);//end game and show lose screen
+            failureCanvas.SetActive(true);//end game and show lose screen
         }
     }
 
