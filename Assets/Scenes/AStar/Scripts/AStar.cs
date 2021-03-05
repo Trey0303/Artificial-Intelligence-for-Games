@@ -10,11 +10,11 @@ public class AStar : MonoBehaviour
 
     public GameObject prefab;//set a gameobject to create
 
-    public Tile[] tiles;//to create an array of tiles
+    public TileA[] tilesA;//to create an array of tiles
 
     private void Start()
     {
-        tiles = new Tile[gridWidth * gridHeight];//set array to grid
+        tilesA = new TileA[gridWidth * gridHeight];//set array to grid
 
         Vector3 offset = Vector3.zero;//create an offset an set to zero
 
@@ -24,7 +24,7 @@ public class AStar : MonoBehaviour
             for (int j = 0; j < gridWidth; ++j)//goes through grid a set number of times before going on to the next row on grid height
             {
                 GameObject newTile = Instantiate(prefab, transform.position + offset, transform.rotation);//create new tile
-                tiles[i * gridWidth + j] = newTile.GetComponent<Tile>();//add new tile to array
+                tilesA[i * gridWidth + j] = newTile.GetComponent<TileA>();//add new tile to array
                 newTile.name = string.Format("{0}, {1}", i, j);//name tile on graph
                 offset.x += 1.0f;//when ever an object spawns shift x by one to create a row
             }
@@ -34,44 +34,44 @@ public class AStar : MonoBehaviour
         }
 
         // setup connections
-        for (int i = 0; i < tiles.Length; ++i)
+        for (int i = 0; i < tilesA.Length; ++i)
         {
-            List<Tile> connectedTiles = new List<Tile>();
+            List<TileA> connectedTiles = new List<TileA>();
 
             // if we're not at the left-edge
             if (i % gridWidth != 0)
             {
-                connectedTiles.Add(tiles[i - 1]);
+                connectedTiles.Add(tilesA[i - 1]);
             }
 
             // if we're not at the right-edge
             if ((i + 1) % gridWidth != 0)
             {
-                connectedTiles.Add(tiles[i + 1]);
+                connectedTiles.Add(tilesA[i + 1]);
             }
 
             // if we're not at the upper-edge
             if (i < gridWidth * gridHeight - gridWidth)
             {
-                connectedTiles.Add(tiles[i + gridWidth]);
+                connectedTiles.Add(tilesA[i + gridWidth]);
             }
 
             // if we're not at the bottom-edge
             if (i > gridWidth - 1)
             {
-                connectedTiles.Add(tiles[i - gridWidth]);
+                connectedTiles.Add(tilesA[i - gridWidth]);
             }
 
-            tiles[i].connectedTiles = connectedTiles.ToArray();
+            tilesA[i].connectedTilesA = connectedTiles.ToArray();
         }
     }
 
     //Path Generation
 
-    private Tile GetCheapestTile(Tile[] arr)
+    private TileA GetCheapestTile(TileA[] arr)
     {
         float bestGScore = float.MaxValue;//initialize
-        Tile bestTile = null;//initialize
+        TileA bestTile = null;//initialize
 
         for (int i = 0; i < arr.Length; ++i)
         {
@@ -91,7 +91,7 @@ public class AStar : MonoBehaviour
     //}
 
     //                             whats the tile,    whats the destination tile
-    private int GetHScoreManhattan(Tile selectedTile, Tile destructionTile)
+    private int GetHScoreManhattan(TileA selectedTile, TileA destructionTile)
     {
         Vector2Int tileOffset = selectedTile.tilePosition - destructionTile.tilePosition;
         return Mathf.Abs(tileOffset.x) + Mathf.Abs(tileOffset.y);//returns score as a single int (getting the differences between the x's and y's and putting it into one val) to get h score
@@ -99,42 +99,42 @@ public class AStar : MonoBehaviour
 
     private void ResetNodes()
     {
-        for (int i = 0; i < tiles.Length; ++i)
+        for (int i = 0; i < tilesA.Length; ++i)
         {
-            tiles[i].gScore = 0;//set tiles gscore to zero
-            tiles[i].previousTile = null;//set previous tile to null
+            tilesA[i].gScore = 0;//set tiles gscore to zero
+            tilesA[i].previousTile = null;//set previous tile to null
         }
     }
 
 
-    public Tile[] CalculatePath(Tile origin, Tile destination)// CalculatePath(start and end)
+    public TileA[] CalculatePath(TileA origin, TileA destination)// CalculatePath(start and end)
     {
         ResetNodes();//clear old data
 
-        List<Tile> openList = new List<Tile>();//nodes that have NOT been traversed through
-        List<Tile> closedList = new List<Tile>();//nodes that have been traversed through
+        List<TileA> openListA = new List<TileA>();//nodes that have NOT been traversed through
+        List<TileA> closedListA = new List<TileA>();//nodes that have been traversed through
 
-        openList.Add(origin);//add starting tile 
+        openListA.Add(origin);//add starting tile 
 
 
-        while (openList.Count != 0 &&               // still stuff left to explore
-               !closedList.Contains(destination))   // AND we haven't reached the destination yet
+        while (openListA.Count != 0 &&               // still stuff left to explore
+               !closedListA.Contains(destination))   // AND we haven't reached the destination yet
         {
 
             // TODO: replace this with a proper sorted array implementation
-            Tile current = GetCheapestTile(openList.ToArray());//update current
+            TileA current = GetCheapestTile(openListA.ToArray());//update current
 
 
-            openList.Remove(current);//remove current node from list
+            openListA.Remove(current);//remove current node from list
 
-            closedList.Add(current);//add current node to list
+            closedListA.Add(current);//add current node to list
 
             // TODO...
             // calculate g scores for connected tiles
             //throw new System.NotImplementedException();
-            for (int i = 0; i < current.connectedTiles.Length; ++i)//until it reaches the last connected tile
+            for (int i = 0; i < current.connectedTilesA.Length; ++i)//until it reaches the last connected tile
             {
-                Tile adjTile = current.connectedTiles[i];//create adjTile and set to current connected tile
+                TileA adjTile = current.connectedTilesA[i];//create adjTile and set to current connected tile
 
                 int calGScore = current.gScore + adjTile.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
 
@@ -148,19 +148,19 @@ public class AStar : MonoBehaviour
                     adjTile.hScore = GetHScoreManhattan(adjTile, destination);//calculate H Score using the manhatten method
                 }
 
-                if (!closedList.Contains(adjTile) && !openList.Contains(adjTile))//if neither of theses lists have this tile
+                if (!closedListA.Contains(adjTile) && !openListA.Contains(adjTile))//if neither of theses lists have this tile
                 {
-                    openList.Add(adjTile);//add tile to openList
+                    openListA.Add(adjTile);//add tile to openList
                 }
             }
 
         }
 
-        List<Tile> path = new List<Tile>();//create list
+        List<TileA> path = new List<TileA>();//create list
 
-        if (closedList.Contains(destination))//if closedList destination was reached
+        if (closedListA.Contains(destination))//if closedList destination was reached
         {
-            Tile prevTile = destination;//start at the end of closedList
+            TileA prevTile = destination;//start at the end of closedList
             while (prevTile != origin)//while on not at the start of closedList
             {
                 path.Add(prevTile);//add a previous tile 

@@ -3571,7 +3571,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2004443498}
+      - m_Target: {fileID: 0}
         m_MethodName: Setup
         m_Mode: 1
         m_Arguments:
@@ -16822,7 +16822,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2004443498}
+      - m_Target: {fileID: 0}
         m_MethodName: StartNextWave
         m_Mode: 1
         m_Arguments:
@@ -18992,8 +18992,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2004443500}
-  - component: {fileID: 2004443498}
   - component: {fileID: 2004443499}
+  - component: {fileID: 2004443501}
+  - component: {fileID: 2004443498}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -19010,22 +19011,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2004443497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0b07741b9e22c429be9e90aa3408e9, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e799a331eca08b408e3d92531f4da05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graph: {fileID: 0}
-  spawnPrefab: {fileID: 6023105661554673325, guid: b6ed695db0115c844899e9a2335736ac,
-    type: 3}
-  defendPrefab: {fileID: 8950650682870792104, guid: 17d7bf2b350ea5c4cb98a5f9fc5b713f,
-    type: 3}
-  wallPrefab: {fileID: 2243574079240238477, guid: 92b21546d2e35d9419e51324d0509b13,
-    type: 3}
-  enemyPrefab: {fileID: 198303951728090532, guid: 13691f4417f11be4eb5fa63e40d21caf,
-    type: 3}
-  spawnInterval: 0.75
-  spawnCountPerWave: 10
-  livesRemaining: 10
-  failureCanvas: {fileID: 975661539}
 --- !u!114 &2004443499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19056,6 +19044,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2004443501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004443497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d11c9364e3f35e4eb1eb5e9aa1021fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 0
+  gridHeight: 0
+  prefab: {fileID: 0}
+  tiles: []
 --- !u!1001 &2004445923
 PrefabInstance:
   m_ObjectHideFlags: 0
