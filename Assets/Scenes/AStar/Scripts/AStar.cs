@@ -133,19 +133,24 @@ public class AStar : MonoBehaviour
             // TODO...
             // calculate g scores for connected tiles
             //throw new System.NotImplementedException();
-            for (int i = 0; i < currentA.connectedTilesA.Length; ++i)//until it reaches the last connected tile
+
+            // iterate through all connected tiles
+            for (int i = 0; i < currentA.connectedTilesA.Length; ++i)
             {
-                TileA adjTileA = currentA.connectedTilesA[i];//create adjTile and set to current connected tile
+                // create variable for to current connected tile for readability
+                TileA adjTileA = currentA.connectedTilesA[i];
 
-                int calGScore = currentA.gScore + adjTileA.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
+                // skip tiles that were already processed or not traversible
+                if (closedListA.Contains(adjTileA) || !adjTileA.traversible) { continue; }
 
-                if (!adjTileA.traversible) { continue; }//if not traversable move on to next node
+                // NOTE: hard-coded cost of 1
+                int estGScore = currentA.gScore + 1;
 
-                if (adjTileA.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
-                    calGScore < adjTileA.gScore)//or estScore is less than current adjTile gScore
+                if (adjTileA.previousTile == null ||     // there is no score (no previous tile) OR
+                    estGScore < adjTileA.gScore)         // this is a cheaper route...
                 {
-                    adjTileA.previousTile = currentA;//set adjTile previous tile to current(adjTile is one tile ahead of current)
-                    adjTileA.gScore = calGScore;
+                    adjTileA.previousTile = currentA;
+                    adjTileA.gScore = estGScore;
                     adjTileA.hScore = GetHScoreManhattan(adjTileA, destination);
                 }
 

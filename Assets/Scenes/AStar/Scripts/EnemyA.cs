@@ -12,7 +12,7 @@ public class EnemyA : MonoBehaviour
     public float moveSpeedA = 1.0f;
     public int valueA = 100;
 
-    private void FixedUpdateA()
+    private void FixedUpdate()
     {
         // if path complete, do nothing
         if (targetPathIndexA == gameStateA.enemyPathA.Length) { return; }
@@ -26,7 +26,7 @@ public class EnemyA : MonoBehaviour
         }
     }
 
-    private void OnDestroyA()//will despawn enemy
+    private void OnDestroy()//will despawn enemy
     {
         if (gameStateA)
         {
