@@ -83,13 +83,14 @@ public class StateA : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))//if mouse click
             {
-                bool clicked = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);//get mouse click position
-                if (!clicked) { return; }//if nothing valid was clicked
+                Debug.Log("Clicked");
+                bool clickedA = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hitA);//get mouse click position
+                if (!clickedA) { return; }//if nothing valid was clicked
 
-                if (hit.collider.gameObject.TryGetComponent<Tile>(out var tile))//if tile was clicked
+                if (hitA.collider.gameObject.TryGetComponent<Tile>(out var tileA))//if tile was clicked
                 {
-                    Instantiate(wallPrefabA, tile.transform.position, tile.transform.rotation);//spawn wall
-                    tile.traversible = false;//set tile traversible to false so that enemies cant walk through wall
+                    Instantiate(wallPrefabA, tileA.transform.position, tileA.transform.rotation);//spawn wall
+                    tileA.traversible = false;//set tile traversible to false so that enemies cant walk through wall
 
                     enemyPathA = graphA.CalculatePath(startTileA, endTileA);//Update enemy path with new information
                 }

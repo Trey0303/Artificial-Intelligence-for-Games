@@ -11,7 +11,7 @@ public class TileA : MonoBehaviour
     public int hScore;//heuristic score
     public int fScore { get { return gScore + hScore; } }//to find out what the cheapest will be
 
-    public int cost = 1;//cost(hard-coded travel cost to 1)
+    //public int cost = 1;//cost(hard-coded travel cost to 1)
 
     public bool traversible = true;
 

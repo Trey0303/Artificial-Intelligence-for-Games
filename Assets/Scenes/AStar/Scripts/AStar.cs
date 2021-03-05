@@ -25,6 +25,7 @@ public class AStar : MonoBehaviour
             {
                 GameObject newTile = Instantiate(prefab, transform.position + offset, transform.rotation);//create new tile
                 tilesA[i * gridWidth + j] = newTile.GetComponent<TileA>();//add new tile to array
+                tilesA[i * gridWidth + j].tilePosition = new Vector2Int(j, i);
                 newTile.name = string.Format("{0}, {1}", i, j);//name tile on graph
                 offset.x += 1.0f;//when ever an object spawns shift x by one to create a row
             }
@@ -117,43 +118,40 @@ public class AStar : MonoBehaviour
         openListA.Add(origin);//add starting tile 
 
 
-        while (openListA.Count != 0 &&               // still stuff left to explore
-               !closedListA.Contains(destination))   // AND we haven't reached the destination yet
+        while (openListA.Count != 0 &&        // still stuff left to explore
+        !closedListA.Contains(destination))   // AND we haven't reached the destination yet
         {
-
             // TODO: replace this with a proper sorted array implementation
-            TileA current = GetCheapestTile(openListA.ToArray());//update current
+            TileA current = GetCheapestTile(openListA.ToArray());
+            openListA.Remove(current);
+            closedListA.Add(current);
 
-
-            openListA.Remove(current);//remove current node from list
-
-            closedListA.Add(current);//add current node to list
-
-            // TODO...
-            // calculate g scores for connected tiles
-            //throw new System.NotImplementedException();
-            for (int i = 0; i < current.connectedTilesA.Length; ++i)//until it reaches the last connected tile
+            // iterate through all connected tiles
+            for (int i = 0; i < current.connectedTilesA.Length; ++i)
             {
-                TileA adjTile = current.connectedTilesA[i];//create adjTile and set to current connected tile
+                // create variable for to current connected tile for readability
+                TileA adjTile = current.connectedTilesA[i];
 
-                int calGScore = current.gScore + adjTile.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
+                // skip tiles that were already processed or not traversible
+                if (closedListA.Contains(adjTile) || !adjTile.traversible) { continue; }
 
-                if (!adjTile.traversible) { continue; }//if not traversable move on to next node
+                // NOTE: hard-coded cost of 1
+                int estGScore = current.gScore + 1;
 
-                if (adjTile.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
-                    calGScore < adjTile.gScore)//or estScore is less than current adjTile gScore
+                if (adjTile.previousTile == null ||     // there is no score (no previous tile) OR
+                    estGScore < adjTile.gScore)         // this is a cheaper route...
                 {
-                    adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
-                    adjTile.gScore = calGScore;
-                    adjTile.hScore = GetHScoreManhattan(adjTile, destination);//calculate H Score using the manhatten method
+                    adjTile.previousTile = current;
+                    adjTile.gScore = estGScore;
+                    adjTile.hScore = GetHScoreManhattan(adjTile, destination);
                 }
 
-                if (!closedListA.Contains(adjTile) && !openListA.Contains(adjTile))//if neither of theses lists have this tile
+                if (!closedListA.Contains(adjTile) && // if a connected tile is not in the closed list AND
+                    !openListA.Contains(adjTile))    // is not *already* in the open list
                 {
-                    openListA.Add(adjTile);//add tile to openList
+                    openListA.Add(adjTile);
                 }
             }
-
         }
 
         List<TileA> path = new List<TileA>();//create list

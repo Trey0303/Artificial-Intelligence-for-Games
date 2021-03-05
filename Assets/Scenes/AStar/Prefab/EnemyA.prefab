@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7891150086923534347}
   - component: {fileID: 8890338430581514511}
   - component: {fileID: 7325345136144107384}
-  - component: {fileID: 2202091169613940877}
+  - component: {fileID: 4683283505118643083}
   m_Layer: 0
   m_Name: EnemyA
   m_TagString: Untagged
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rbody: {fileID: 8890338430581514511}
---- !u!114 &2202091169613940877
+--- !u!114 &4683283505118643083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
