@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BaseA : MonoBehaviour
 {
-    public State gameStateA;
+    public StateA gameStateA;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider otherA)
     {
-        bool isEnemy = other.TryGetComponent<EnemyA>(out var enemy);//bool to know when enemy touches base
-        if (isEnemy)//if enemy touches base
+        bool isEnemyA = otherA.TryGetComponent<EnemyA>(out var enemyA);//bool to know when enemy touches base
+        if (isEnemyA)//if enemy touches base
         {
-            Destroy(enemy.gameObject);//enemy is destroyed
-            --gameStateA.livesRemaining;//lose health
+            Destroy(enemyA.gameObject);//enemy is destroyed
+            --gameStateA.livesRemainingA;//lose health
         }
     }
 }

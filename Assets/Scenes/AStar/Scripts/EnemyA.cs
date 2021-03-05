@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class EnemyA : MonoBehaviour
 {
-    public Agent agent;//set an agent
+    public Agent agentA;//set an agent
 
-    public State gameStateA { get; set; }
-    private int targetPathIndex = 0;
+    public StateA gameStateA { get; set; }
+    private int targetPathIndexA = 0;
 
-    public float moveSpeed = 1.0f;
-    public int value = 100;
+    public float moveSpeedA = 1.0f;
+    public int valueA = 100;
 
-    private void FixedUpdate()
+    private void FixedUpdateA()
     {
         // if path complete, do nothing
-        if (targetPathIndex == gameStateA.enemyPath.Length) { return; }
+        if (targetPathIndexA == gameStateA.enemyPathA.Length) { return; }
 
-        agent.velocity = (gameStateA.enemyPath[targetPathIndex].transform.position - agent.transform.position).normalized * moveSpeed;
-        agent.UpdateMovement();
+        agentA.velocity = (gameStateA.enemyPathA[targetPathIndexA].transform.position - agentA.transform.position).normalized * moveSpeedA;
+        agentA.UpdateMovement();
 
-        if (Vector3.Distance(agent.transform.position, gameStateA.enemyPath[targetPathIndex].transform.position) < 0.3f)
+        if (Vector3.Distance(agentA.transform.position, gameStateA.enemyPathA[targetPathIndexA].transform.position) < 0.3f)
         {
-            ++targetPathIndex;
+            ++targetPathIndexA;
         }
     }
 
-    private void OnDestroy()//will despawn enemy
+    private void OnDestroyA()//will despawn enemy
     {
         if (gameStateA)
         {
-            --gameStateA.activeEnemies;//removes enemy form activeEnemies
+            --gameStateA.activeEnemiesA;//removes enemy form activeEnemies
         }
     }
 }
