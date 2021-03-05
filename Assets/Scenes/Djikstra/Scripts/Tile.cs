@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    public Vector2Int tilePosition { get; set; }//helps retrieve a tiles position
     public Tile previousTile;//keeps track of previous nodes
     public Tile[] connectedTiles;//store connected tiles
-    public int gScore;//score
+    public int gScore;
+    public int hScore;//heuristic score
+    public int fScore { get { return gScore + hScore; } }//to find out what the cheapest will be
+
     public int cost = 1;//cost(hard-coded travel cost to 1)
 
     public bool traversible = true;

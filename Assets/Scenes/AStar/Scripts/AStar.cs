@@ -12,11 +12,6 @@ public class AStar : MonoBehaviour
 
     public Tile[] tiles;//to create an array of tiles
 
-    //public Tile debugStart;
-    //public Tile debugEnd;
-
-    //private Tile[] debugPath;
-
     private void Start()
     {
         tiles = new Tile[gridWidth * gridHeight];//set array to grid
@@ -80,23 +75,27 @@ public class AStar : MonoBehaviour
 
         for (int i = 0; i < arr.Length; ++i)
         {
-            if (arr[i].gScore < bestGScore)//if current tile has the best score
+            if (arr[i].fScore < bestGScore)//if current tile has the best score
             {
                 bestTile = arr[i];//set to current index
-                bestGScore = arr[i].gScore;//set to current index score
+                bestGScore = arr[i].fScore;//set to current index score
             }
         }
 
         return bestTile;
     }
 
-    //private void Update()
+    //private int GetHScoreDjikstra(Tile selectedTile, Tile destructionTile)
     //{
-    //    if (Input.GetKeyDown(KeyCode.G))//visually shows calculatedPath
-    //    {
-    //        debugPath = CalculatePath(debugStart, debugEnd);
-    //    }
+    //    return 0;
     //}
+
+    //                             whats the tile,    whats the destination tile
+    private int GetHScoreManhattan(Tile selectedTile, Tile destructionTile)
+    {
+        Vector2Int tileOffset = selectedTile.tilePosition - destructionTile.tilePosition;
+        return Mathf.Abs(tileOffset.x) + Mathf.Abs(tileOffset.y);//returns score as a single int (getting the differences between the x's and y's and putting it into one val) to get h score
+    }
 
     private void ResetNodes()
     {
@@ -106,6 +105,7 @@ public class AStar : MonoBehaviour
             tiles[i].previousTile = null;//set previous tile to null
         }
     }
+
 
     public Tile[] CalculatePath(Tile origin, Tile destination)// CalculatePath(start and end)
     {
@@ -145,6 +145,7 @@ public class AStar : MonoBehaviour
                 {
                     adjTile.previousTile = current;//set adjTile previous tile to current(adjTile is one tile ahead of current)
                     adjTile.gScore = calGScore;
+                    adjTile.hScore = GetHScoreManhattan(adjTile, destination);//calculate H Score using the manhatten method
                 }
 
                 if (!closedList.Contains(adjTile) && !openList.Contains(adjTile))//if neither of theses lists have this tile
