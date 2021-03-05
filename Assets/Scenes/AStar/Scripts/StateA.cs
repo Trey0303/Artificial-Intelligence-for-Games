@@ -83,7 +83,7 @@ public class StateA : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))//if mouse click
             {
-                Debug.Log("Clicked");
+                //Debug.Log("Clicked");
                 bool clickedA = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hitA);//get mouse click position
                 if (!clickedA) { return; }//if nothing valid was clicked
 
