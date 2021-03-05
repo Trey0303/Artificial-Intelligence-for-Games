@@ -87,7 +87,7 @@ public class StateA : MonoBehaviour
                 bool clickedA = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hitA);//get mouse click position
                 if (!clickedA) { return; }//if nothing valid was clicked
 
-                if (hitA.collider.gameObject.TryGetComponent<Tile>(out var tileA))//if tile was clicked
+                if (hitA.collider.gameObject.TryGetComponent<TileA>(out var tileA))//if tile was clicked
                 {
                     Instantiate(wallPrefabA, tileA.transform.position, tileA.transform.rotation);//spawn wall
                     tileA.traversible = false;//set tile traversible to false so that enemies cant walk through wall
