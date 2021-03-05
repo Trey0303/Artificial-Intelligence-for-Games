@@ -19023,7 +19023,7 @@ MonoBehaviour:
   enemyPrefabA: {fileID: 198303951728090532, guid: 514d1c9958fe37f44b27b0f55ef8434f,
     type: 3}
   spawnIntervalA: 0.75
-  spawnCountPerWaveA: 10
+  spawnCountPerWaveA: 1
   livesRemainingA: 10
   failureCanvasA: {fileID: 975661539}
 --- !u!114 &2004443499

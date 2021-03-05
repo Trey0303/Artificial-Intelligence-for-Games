@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,33 +38,33 @@ public class AStar : MonoBehaviour
         // setup connections
         for (int i = 0; i < tilesA.Length; ++i)
         {
-            List<TileA> connectedTiles = new List<TileA>();
+            List<TileA> connectedTilesA = new List<TileA>();
 
             // if we're not at the left-edge
             if (i % gridWidth != 0)
             {
-                connectedTiles.Add(tilesA[i - 1]);
+                connectedTilesA.Add(tilesA[i - 1]);
             }
 
             // if we're not at the right-edge
             if ((i + 1) % gridWidth != 0)
             {
-                connectedTiles.Add(tilesA[i + 1]);
+                connectedTilesA.Add(tilesA[i + 1]);
             }
 
             // if we're not at the upper-edge
             if (i < gridWidth * gridHeight - gridWidth)
             {
-                connectedTiles.Add(tilesA[i + gridWidth]);
+                connectedTilesA.Add(tilesA[i + gridWidth]);
             }
 
             // if we're not at the bottom-edge
             if (i > gridWidth - 1)
             {
-                connectedTiles.Add(tilesA[i - gridWidth]);
+                connectedTilesA.Add(tilesA[i - gridWidth]);
             }
 
-            tilesA[i].connectedTilesA = connectedTiles.ToArray();
+            tilesA[i].connectedTilesA = connectedTilesA.ToArray();
         }
     }
 
@@ -71,31 +72,31 @@ public class AStar : MonoBehaviour
 
     private TileA GetCheapestTile(TileA[] arr)
     {
-        float bestGScore = float.MaxValue;//initialize
+        float bestScore = float.MaxValue;//initialize
         TileA bestTile = null;//initialize
 
         for (int i = 0; i < arr.Length; ++i)
         {
-            if (arr[i].fScore < bestGScore)//if current tile has the best score
+            if (arr[i].fScore < bestScore)//if current tile has the best score
             {
                 bestTile = arr[i];//set to current index
-                bestGScore = arr[i].fScore;//set to current index score
+                bestScore = arr[i].fScore;//set to current index score
             }
         }
 
         return bestTile;
     }
 
-    //private int GetHScoreDjikstra(Tile selectedTile, Tile destructionTile)
-    //{
-    //    return 0;
-    //}
+    private int GetHScoreDjikstra(Tile selectedTile, Tile destructionTile)
+    {
+        return 0;
+    }
 
     //                             whats the tile,    whats the destination tile
-    private int GetHScoreManhattan(TileA selectedTile, TileA destructionTile)
+    private int GetHScoreManhattan(TileA selectedTile, TileA destinationTile)
     {
-        Vector2Int tileOffset = selectedTile.tilePosition - destructionTile.tilePosition;
-        return Mathf.Abs(tileOffset.x) + Mathf.Abs(tileOffset.y);//returns score as a single int (getting the differences between the x's and y's and putting it into one val) to get h score
+        Vector2Int tileOffset = selectedTile.tilePosition - destinationTile.tilePosition;
+        return Math.Abs(tileOffset.x) + Math.Abs(tileOffset.y);//returns score as a single int (getting the differences between the x's and y's and putting it into one val) to get h score
     }
 
     private void ResetNodes()
@@ -117,42 +118,46 @@ public class AStar : MonoBehaviour
 
         openListA.Add(origin);//add starting tile 
 
-
-        while (openListA.Count != 0 &&        // still stuff left to explore
-        !closedListA.Contains(destination))   // AND we haven't reached the destination yet
+        while (openListA.Count != 0 &&               // still stuff left to explore
+               !closedListA.Contains(destination))   // AND we haven't reached the destination yet
         {
+
             // TODO: replace this with a proper sorted array implementation
-            TileA current = GetCheapestTile(openListA.ToArray());
-            openListA.Remove(current);
-            closedListA.Add(current);
+            TileA currentA = GetCheapestTile(openListA.ToArray());//update current
 
-            // iterate through all connected tiles
-            for (int i = 0; i < current.connectedTilesA.Length; ++i)
+
+            openListA.Remove(currentA);//remove current node from list
+
+            closedListA.Add(currentA);//add current node to list
+
+            // TODO...
+            // calculate g scores for connected tiles
+            //throw new System.NotImplementedException();
+            for (int i = 0; i < currentA.connectedTilesA.Length; ++i)//until it reaches the last connected tile
             {
-                // create variable for to current connected tile for readability
-                TileA adjTile = current.connectedTilesA[i];
+                TileA adjTileA = currentA.connectedTilesA[i];//create adjTile and set to current connected tile
 
-                // skip tiles that were already processed or not traversible
-                if (closedListA.Contains(adjTile) || !adjTile.traversible) { continue; }
+                int calGScore = currentA.gScore + adjTileA.cost;//calculate gScore = current gScore + travel cost(hard-coded to 1)
 
-                // NOTE: hard-coded cost of 1
-                int estGScore = current.gScore + 1;
+                if (!adjTileA.traversible) { continue; }//if not traversable move on to next node
 
-                if (adjTile.previousTile == null ||     // there is no score (no previous tile) OR
-                    estGScore < adjTile.gScore)         // this is a cheaper route...
+                if (adjTileA.previousTile == null || //if adjTile previous tile is equal to null(I think this condition is used because preiousTile starts off null)
+                    calGScore < adjTileA.gScore)//or estScore is less than current adjTile gScore
                 {
-                    adjTile.previousTile = current;
-                    adjTile.gScore = estGScore;
-                    adjTile.hScore = GetHScoreManhattan(adjTile, destination);
+                    adjTileA.previousTile = currentA;//set adjTile previous tile to current(adjTile is one tile ahead of current)
+                    adjTileA.gScore = calGScore;
+                    adjTileA.hScore = GetHScoreManhattan(adjTileA, destination);
                 }
 
-                if (!closedListA.Contains(adjTile) && // if a connected tile is not in the closed list AND
-                    !openListA.Contains(adjTile))    // is not *already* in the open list
+                if (!closedListA.Contains(adjTileA) && !openListA.Contains(adjTileA))//if neither of theses lists have this tile
                 {
-                    openListA.Add(adjTile);
+                    openListA.Add(adjTileA);//add tile to openList
                 }
             }
+
         }
+
+        
 
         List<TileA> path = new List<TileA>();//create list
 
