@@ -83,12 +83,12 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 curPos = agent.transform.position;//get agent current position
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
 
-        //agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
-        //agent.UpdateMovement();//updates movement changes
+        agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
+        agent.UpdateMovement();//updates movement changes
 
-        //agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
+        agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
-        GetComponent<NavMeshAgent>().destination = waypoints[currentWaypointIndex].position;
+        //GetComponent<NavMeshAgent>().destination = waypoints[currentWaypointIndex].position;
 
         if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
