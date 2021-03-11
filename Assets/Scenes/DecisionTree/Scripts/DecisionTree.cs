@@ -13,9 +13,9 @@ public class DecisionTree : MonoBehaviour
     void Start()
     {
         BooleanDecision boolDecision = new BooleanDecision(true);
-        boolDecision.trueDecision = new CustomPrintDecision("True");
-        boolDecision.falseDecision = new CustomPrintDecision("False");
-
+        boolDecision.trueDecision = new CustomPrintDecision("True");//prints "true" if true
+        boolDecision.falseDecision = new CustomPrintDecision("False");//prints "false" if false
+        boolDecision.falseDecision = new WaypointReachedDecision();
         decisionTreeRoot = boolDecision;
     }
 
@@ -91,7 +91,7 @@ public class CustomPrintDecision : IDecision
 {
     public string text = "";
 
-    public CustomPrintDecision(string text)
+    public CustomPrintDecision(string text)//assigns text value
     {
         this.text = text;
     }
@@ -99,6 +99,29 @@ public class CustomPrintDecision : IDecision
     {
         Debug.Log(text);
         return null;
+    }
+}
+
+public class WaypointReachedDecision : IDecision
+{
+    private DecisionTree ai;
+    public IDecision reachedDecision;
+    public IDecision notReachedDecision;
+
+    //default constructor
+    public WaypointReachedDecision() { }
+
+    //parameterized constructor, accepts a controller
+    public WaypointReachedDecision(DecisionTree ai)
+    {
+        this.ai = ai;
+    }
+
+    //evaluate the decision
+    public IDecision MakeDecision()
+    {
+        //TODO - ai can be accessed in here for decision making
+        return ai ? reachedDecision : notReachedDecision;
     }
 }
 
