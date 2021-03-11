@@ -31,6 +31,7 @@ public class FiniteStateMachines : MonoBehaviour
     private Transform seekTarget;
     public float detectionRadius = 2.0f;
     public float giveupRadius = 5.0f;
+    public float attackRadius = 1.5f;
 
     // Update is called once per frame
     private void Update()
@@ -98,6 +99,10 @@ public class FiniteStateMachines : MonoBehaviour
     }
     void Attack()
     {
-
+        //are we out of attack range?
+        if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than 5.0f radius
+        {
+            currentState = States.Patrol;
+        }
     }
 }
