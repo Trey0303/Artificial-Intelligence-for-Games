@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class FiniteStateMachines : MonoBehaviour
 {
+
     public Agent agent;
     public GameObject player; 
     public PlayerHealth playerHealth;
+
+    //public Agent enemy;
 
     public float speed = 3.0f;
     public int damage = 1;
@@ -40,6 +43,7 @@ public class FiniteStateMachines : MonoBehaviour
     private void Start()
     {
         playerHealth = player.GetComponent<PlayerHealth>();
+
     }
 
     // Update is called once per frame
@@ -65,7 +69,6 @@ public class FiniteStateMachines : MonoBehaviour
                 break;
         }
 
-        //TODO: add ways to switch from one state to the next
     }
 
     void Patrol()
@@ -90,6 +93,7 @@ public class FiniteStateMachines : MonoBehaviour
         //have we noticed out target?
         if((seekTarget.position - agent.transform.position).magnitude < detectionRadius){//if less than 2.0f radius
             currentState = States.Seek;
+
         }
     }
     void Seek()
@@ -98,6 +102,7 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 goalPos = seekTarget.transform.position;
 
         agent.velocity = (goalPos - curPos).normalized * speed;
+
         agent.UpdateMovement();
 
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
@@ -106,10 +111,12 @@ public class FiniteStateMachines : MonoBehaviour
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
         {
             currentState = States.Patrol;
+            
         }
         else if ((seekTarget.position - agent.transform.position).magnitude < attackRadius)//if in attack radius
         {
             currentState = States.Attack;
+            
         }
     }
     void Attack()
@@ -124,6 +131,7 @@ public class FiniteStateMachines : MonoBehaviour
         if ((seekTarget.position - agent.transform.position).magnitude > attackRadius)//if target is out of attack range
         {
             currentState = States.Seek;
+            
         }
     }
 }
