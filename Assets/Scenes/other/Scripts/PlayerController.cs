@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public LevelEnd end;
+
     public Agent agent;
     public float speed = 5.0f;
 
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.tag == "Pickup")
         {
             other.gameObject.SetActive(false);
+            end.coinsNeededToPass = true;
             coinsPickedUp++;
 
         }

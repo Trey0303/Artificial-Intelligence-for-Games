@@ -1,11 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;//remove when done
 
 public class LevelEnd : MonoBehaviour
 {
-    public bool canEnter = true;
+    public bool canEnter = false;
+
+    public bool coinsNeededToPass = false;
+
+    PlayerController playerController;
+
+    public List<GameObject> allCoinObjects = new List<GameObject>();
+
+    void Start()
+    {
+        allCoinObjects = GameObject.FindGameObjectsWithTag("Pickup").ToList();
+
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        if (coinsNeededToPass)
+        {
+            canEnter = false;
+        }
+    }
 
     public void Update()
     {
@@ -17,13 +34,28 @@ public class LevelEnd : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = Color.red;
         }
+
+        if (coinsNeededToPass)
+        {
+            if (allCoinObjects.Count > 0 && playerController.coinsPickedUp >= allCoinObjects.Count)
+            {
+                canEnter = true;
+                //Debug.Log("All coins are picked up");
+            }
+        }
     }
 
     public void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Player")
+        if (canEnter)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);//replace with ui game clear screen
+            if (other.gameObject.tag == "Player")
+            {
+                Debug.Log("done"); ;//replace with ui game clear screen
+
+            }
         }
     }
+
+
 }

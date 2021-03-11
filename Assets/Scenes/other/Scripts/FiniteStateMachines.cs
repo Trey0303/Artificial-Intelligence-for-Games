@@ -60,16 +60,16 @@ public class FiniteStateMachines : MonoBehaviour
         {
             case States.Patrol:
                 Patrol();
-                Debug.Log("Patroling");
+                //Debug.Log("Patroling");
                 break;
             case States.Seek:
                 Seek();
-                Debug.Log("Seeking");
+                //Debug.Log("Seeking");
                 //if statement switch to attack
                 break;
             case States.Attack:
                 Attack();
-                Debug.Log("Attacking");
+                //Debug.Log("Attacking");
                 break;
             default:
                 Debug.LogError("Invalid state!");
