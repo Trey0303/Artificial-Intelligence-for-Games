@@ -5,7 +5,11 @@ using UnityEngine;
 public class FiniteStateMachines : MonoBehaviour
 {
     public Agent agent;
+    public GameObject player; 
+    public PlayerHealth playerHealth;
+
     public float speed = 3.0f;
+    public int damage = 1;
     public float waypointReachedThreshold = 1.0f;//to know when you reach a waypoint
 
     public Vector3[] patrolLocations;
@@ -33,6 +37,11 @@ public class FiniteStateMachines : MonoBehaviour
     public float giveupRadius = 5.0f;
     public float attackRadius = 1.5f;
 
+    private void Start()
+    {
+        playerHealth = player.GetComponent<PlayerHealth>();
+    }
+
     // Update is called once per frame
     private void Update()
     {
@@ -40,16 +49,16 @@ public class FiniteStateMachines : MonoBehaviour
         {
             case States.Patrol:
                 Patrol();
-                Debug.Log("Patroling");
+                //Debug.Log("Patroling");
                 break;
             case States.Seek:
                 Seek();
-                Debug.Log("Seeking");
+                //Debug.Log("Seeking");
                 //if statement switch to attack
                 break;
             case States.Attack:
                 Attack();
-                Debug.Log("Attacking");
+                //Debug.Log("Attacking");
                 break;
             default:
                 Debug.LogError("Invalid state!");
@@ -91,18 +100,30 @@ public class FiniteStateMachines : MonoBehaviour
         agent.velocity = (goalPos - curPos).normalized * speed;
         agent.UpdateMovement();
 
+        agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
+
         //have we noticed out target?
-        if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than 5.0f radius
+        if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
         {
             currentState = States.Patrol;
+        }
+        else if ((seekTarget.position - agent.transform.position).magnitude < attackRadius)//if in attack radius
+        {
+            currentState = States.Attack;
         }
     }
     void Attack()
     {
-        //are we out of attack range?
-        if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than 5.0f radius
+        if (playerHealth.health > 0)//if player has health
         {
-            currentState = States.Patrol;
+            playerHealth.health = playerHealth.health - damage;//player takes damage
+
+        }
+
+        //are we out of attack range?
+        if ((seekTarget.position - agent.transform.position).magnitude > attackRadius)//if target is out of attack range
+        {
+            currentState = States.Seek;
         }
     }
 }
