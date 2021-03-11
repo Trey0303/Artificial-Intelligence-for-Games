@@ -66,7 +66,7 @@ public class FiniteStateMachines : MonoBehaviour
         agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
         agent.UpdateMovement();//updates movement changes
 
-        agent.transform.forward = (goalPos - curPos).normalized;
+        agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
         if((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
