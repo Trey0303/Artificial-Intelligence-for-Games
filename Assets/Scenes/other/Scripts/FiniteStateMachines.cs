@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.AI;//NavMesh
+
 public class FiniteStateMachines : MonoBehaviour
 {
 
@@ -9,7 +11,11 @@ public class FiniteStateMachines : MonoBehaviour
     public GameObject player; 
     public PlayerHealth playerHealth;
 
-    //public Agent enemy;
+    NavMeshAgent myNavMeshAgent;
+
+    //enemy
+    public Tile[] enemyPath { get; private set; }
+
 
     public float speed = 3.0f;
     public int damage = 1;
@@ -44,6 +50,7 @@ public class FiniteStateMachines : MonoBehaviour
     {
         playerHealth = player.GetComponent<PlayerHealth>();
 
+        //myNavMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -53,16 +60,16 @@ public class FiniteStateMachines : MonoBehaviour
         {
             case States.Patrol:
                 Patrol();
-                //Debug.Log("Patroling");
+                Debug.Log("Patroling");
                 break;
             case States.Seek:
                 Seek();
-                //Debug.Log("Seeking");
+                Debug.Log("Seeking");
                 //if statement switch to attack
                 break;
             case States.Attack:
                 Attack();
-                //Debug.Log("Attacking");
+                Debug.Log("Attacking");
                 break;
             default:
                 Debug.LogError("Invalid state!");
@@ -76,12 +83,14 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 curPos = agent.transform.position;//get agent current position
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
 
-        agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
-        agent.UpdateMovement();//updates movement changes
+        //agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
+        //agent.UpdateMovement();//updates movement changes
 
-        agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
+        //agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
-        if((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
+        GetComponent<NavMeshAgent>().destination = waypoints[currentWaypointIndex].position;
+
+        if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
             ++currentWaypointIndex;
             if(currentWaypointIndex >= waypoints.Length)
@@ -98,14 +107,17 @@ public class FiniteStateMachines : MonoBehaviour
     }
     void Seek()
     {
-        Vector3 curPos = agent.transform.position;
-        Vector3 goalPos = seekTarget.transform.position;
+        //Vector3 curPos = agent.transform.position;
+        //Vector3 goalPos = seekTarget.transform.position;
 
-        agent.velocity = (goalPos - curPos).normalized * speed;
+        //agent.velocity = (goalPos - curPos).normalized * speed;
 
-        agent.UpdateMovement();
+        //agent.UpdateMovement();
 
-        agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
+        //agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
+
+        //SetDestinationToPosition();//trigger
+        GetComponent<NavMeshAgent>().destination = player.transform.position;
 
         //have we noticed out target?
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
@@ -134,4 +146,15 @@ public class FiniteStateMachines : MonoBehaviour
             
         }
     }
+
+    //void SetDestinationToPosition()
+    //{
+    //    Vector3 goalPos = seekTarget.transform.position;
+    //    RaycastHit hit;
+    //    Ray ray = goalPos;//get target position
+    //    if (Physics.Raycast(ray, out hit))
+    //    {
+    //        myNavMeshAgent.SetDestination(hit.point);
+    //    }
+    //}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NavMeshController : MonoBehaviour
+public class NavMeshPathfinding : MonoBehaviour
 {
     NavMeshAgent myNavMeshAgent;
 
@@ -26,7 +26,7 @@ public class NavMeshController : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//get target position
-        if(Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit))
         {
             myNavMeshAgent.SetDestination(hit.point);
         }
