@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 5906095004789754777}
   - component: {fileID: 5906095004789754776}
   - component: {fileID: 5906095004789754779}
+  - component: {fileID: 766446918}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137,5 +138,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b859e6a76582b634cb99dfd49fc2bafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  end: {fileID: 0}
   agent: {fileID: 5906095004789754776}
   speed: 5
+  coinsPickedUp: 0
+--- !u!114 &766446918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5906095004789754782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72a8262df3599044c8b9c5852afffb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 5906095004789754782}
+  health: 1
