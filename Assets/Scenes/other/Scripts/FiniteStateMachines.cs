@@ -6,25 +6,13 @@ using UnityEngine.AI;//NavMesh
 
 public class FiniteStateMachines : MonoBehaviour
 {
-    ////a*
-    //[Header("Map Settings")]
-    //public AStar graphA;//tiles
-    //private TileA startTileA;
-    //private TileA endTileA;
-    ////enemy
-    //public GameObject enemyPrefabA;
-    //public TileA[] enemyPathA { get; private set; }
-    //private int targetPathIndexA = 0;
-    //public float moveSpeedA = 1.0f;
-    //public int valueA = 100;
-
-
     public Agent agent;
     public GameObject player; 
     public PlayerHealth playerHealth;
 
     public static bool gameOver = false;
 
+    //navMesh
     private NavMeshPath path;
     
 
@@ -63,20 +51,10 @@ public class FiniteStateMachines : MonoBehaviour
     {
         playerHealth = player.GetComponent<PlayerHealth>();
 
+        //navMesh Pathfinding
         path = new NavMeshPath();
 
         elapsed = 0.0f;
-
-        ////a* (spawns floor to find path )
-        //int startIdxA = (graphA.gridHeight / 2) * graphA.gridWidth;//sets a new int at the start of the graph
-        //int endIdxA = startIdxA + graphA.gridWidth - 1;//sets a new int at the end of the graph
-
-        //startTileA = graphA.tilesA[startIdxA];//sets startTile to the first tile using startIdx
-        //endTileA = graphA.tilesA[endIdxA];//sets endTile to the last tile at the end of the graph using endIdx
-
-
-        //enemyPathA = graphA.CalculatePath(startTileA, endTileA);//uses CalculatePath function to make its way from enemy spawner to base/makes its way from startTile to endTile(startTile and endTile are used as start and end points)
-
 
     }
 
@@ -126,21 +104,6 @@ public class FiniteStateMachines : MonoBehaviour
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
 
-
-        //a*
-        // if path complete, do nothing
-
-        //if (targetPathIndexA == enemyPathA.Length) { return; }
-
-        //agent.velocity = (enemyPathA[targetPathIndexA].transform.position - agent.transform.position).normalized * moveSpeedA;
-        //agent.UpdateMovement();
-
-        //if (Vector3.Distance(agent.transform.position, enemyPathA[targetPathIndexA].transform.position) < 0.3f)
-        //{
-        //    ++targetPathIndexA;
-        //}
-
-
         //finite state machines
         if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
@@ -160,6 +123,7 @@ public class FiniteStateMachines : MonoBehaviour
         }
         //have we noticed out target?
         if((seekTarget.position - agent.transform.position).magnitude < detectionRadius){//if less than 2.0f radius
+            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
             currentState = States.Seek;
 
         }
@@ -190,11 +154,11 @@ public class FiniteStateMachines : MonoBehaviour
             Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
         }
 
-        //have we noticed out target?
+        //have we lost our target?
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
         {
+            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
             currentState = States.Patrol;
-            
         }
         else if ((seekTarget.position - agent.transform.position).magnitude < attackRadius)//if in attack radius
         {
