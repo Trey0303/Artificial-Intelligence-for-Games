@@ -25,13 +25,14 @@ public class FiniteStateMachines : MonoBehaviour
 
     public static bool gameOver = false;
 
-    NavMeshAgent myNavMeshAgent;
+    private NavMeshPath path;
     
 
     public float speed = 3.0f;
     public float maxForce = 5.0f;
     public int damage = 1;
     public float waypointReachedThreshold = 1.0f;//to know when you reach a waypoint
+    private float elapsed = 0.0f;
 
     public Vector3[] patrolLocations;
     public int currentPatrolIndex;
@@ -61,6 +62,10 @@ public class FiniteStateMachines : MonoBehaviour
     private void Start()
     {
         playerHealth = player.GetComponent<PlayerHealth>();
+
+        path = new NavMeshPath();
+
+        elapsed = 0.0f;
 
         ////a* (spawns floor to find path )
         //int startIdxA = (graphA.gridHeight / 2) * graphA.gridWidth;//sets a new int at the start of the graph
@@ -111,6 +116,8 @@ public class FiniteStateMachines : MonoBehaviour
 
         Vector3 curPos = agent.transform.position;//get agent current position
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
+        
+        
 
         //finite state machines 
         agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
@@ -118,8 +125,6 @@ public class FiniteStateMachines : MonoBehaviour
 
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
-        //navMesh
-        //GetComponent<NavMeshAgent>().destination = waypoints[currentWaypointIndex].position;
 
 
         //a*
@@ -140,7 +145,14 @@ public class FiniteStateMachines : MonoBehaviour
         if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
             ++currentWaypointIndex;
-            if(currentWaypointIndex >= waypoints.Length)
+            //navMesh
+            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);
+            //visually shows target corners
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
+            }
+            if (currentWaypointIndex >= waypoints.Length)
             {
                 currentWaypointIndex = 0;
             }
@@ -163,8 +175,20 @@ public class FiniteStateMachines : MonoBehaviour
 
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
-        //trigger navMesh
-        //GetComponent<NavMeshAgent>().destination = player.transform.position;
+        //navMesh
+        //update every second.
+        elapsed += Time.deltaTime;
+        if (elapsed > 1.0f)
+        {
+            elapsed -= 1.0f;//set elapsed back to 0.0f
+            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
+
+        }
+        //visually shows target corners
+        for (int i = 0; i < path.corners.Length - 1; i++)
+        {
+            Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
+        }
 
         //have we noticed out target?
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
