@@ -14,7 +14,8 @@ public class FiniteStateMachines : MonoBehaviour
 
     //navMesh
     private NavMeshPath path;
-    
+    private int currentCornerIndex;
+    public float cornerReachedThreshold = 1.0f;
 
     public float speed = 3.0f;
     public float maxForce = 5.0f;
@@ -94,22 +95,28 @@ public class FiniteStateMachines : MonoBehaviour
 
         Vector3 curPos = agent.transform.position;//get agent current position
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
-        
-        
 
-        //finite state machines 
-        agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
-        agent.UpdateMovement();//updates movement changes
+
+
+        //reached the end of the path
+        while (currentCornerIndex < path.corners.Length)
+        {
+            ++currentCornerIndex;//move on to next corner
+            agent.velocity = (path.corners[currentCornerIndex] - curPos).normalized * speed;//gets the velocity of agent
+            agent.UpdateMovement();//updates movement changes
+        }
 
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
+        for (int i = 0; i < path.corners.Length - 1; i++)
+        {
+            Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
+        }
 
-        //finite state machines
         if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
-            ++currentWaypointIndex;
+
             //navMesh
-            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);
             //visually shows target corners
             for (int i = 0; i < path.corners.Length - 1; i++)
             {
@@ -118,11 +125,14 @@ public class FiniteStateMachines : MonoBehaviour
             if (currentWaypointIndex >= waypoints.Length)
             {
                 currentWaypointIndex = 0;
+                currentCornerIndex = 0;//set cornerIndex back to zero
             }
 
         }
         //have we noticed out target?
         if((seekTarget.position - agent.transform.position).magnitude < detectionRadius){//if less than 2.0f radius
+            curPos = agent.transform.position;
+            goalPos = seekTarget.transform.position;
             NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
             currentState = States.Seek;
 
@@ -157,6 +167,7 @@ public class FiniteStateMachines : MonoBehaviour
         //have we lost our target?
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
         {
+            goalPos = waypoints[currentWaypointIndex].position;//where you want to go
             NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
             currentState = States.Patrol;
         }
