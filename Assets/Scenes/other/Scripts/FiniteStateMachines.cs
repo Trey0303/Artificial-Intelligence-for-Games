@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//using UnityEngine.AI;//NavMesh
+using UnityEngine.AI;//NavMesh
 
 public class FiniteStateMachines : MonoBehaviour
 {
@@ -25,7 +25,7 @@ public class FiniteStateMachines : MonoBehaviour
 
     public static bool gameOver = false;
 
-    //NavMeshAgent myNavMeshAgent;
+    NavMeshAgent myNavMeshAgent;
     
 
     public float speed = 3.0f;
