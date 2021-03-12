@@ -23,6 +23,8 @@ public class FiniteStateMachines : MonoBehaviour
     public GameObject player; 
     public PlayerHealth playerHealth;
 
+    public static bool gameOver = false;
+
     //NavMeshAgent myNavMeshAgent;
     
 
@@ -94,6 +96,11 @@ public class FiniteStateMachines : MonoBehaviour
             default:
                 Debug.LogError("Invalid state!");
                 break;
+        }
+
+        if (gameOver)//if player died
+        {
+            this.enabled = false;//disable this script
         }
 
     }

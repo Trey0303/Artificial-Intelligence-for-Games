@@ -18,6 +18,11 @@ public class PlayerController : MonoBehaviour
         input = Vector3.ClampMagnitude(input, 1);
         agent.velocity = input * speed;
         agent.UpdateMovement();
+
+        if (FiniteStateMachines.gameOver)//if player died
+        {
+            this.enabled = false;//disable this script
+        }
     }
 
     private void OnTriggerEnter(Collider other)

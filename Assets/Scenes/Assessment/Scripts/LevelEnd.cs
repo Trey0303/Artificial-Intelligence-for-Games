@@ -11,6 +11,8 @@ public class LevelEnd : MonoBehaviour
 
     PlayerController playerController;
 
+    public GameObject winPanel;
+
     public List<GameObject> allCoinObjects = new List<GameObject>();
 
     void Start()
@@ -51,8 +53,9 @@ public class LevelEnd : MonoBehaviour
         {
             if (other.gameObject.tag == "Player")
             {
-                Debug.Log("done"); ;//replace with ui game clear screen
-
+                //Debug.Log("done"); ;//replace with ui game clear screen
+                FiniteStateMachines.gameOver = true;
+                winPanel.SetActive(true);
             }
         }
     }
