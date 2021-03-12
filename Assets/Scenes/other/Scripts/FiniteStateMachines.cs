@@ -6,17 +6,17 @@ using UnityEngine;
 
 public class FiniteStateMachines : MonoBehaviour
 {
-    //a*
-    [Header("Map Settings")]
-    public AStar graphA;//tiles
-    private TileA startTileA;
-    private TileA endTileA;
-    //enemy
-    public GameObject enemyPrefabA;
-    public TileA[] enemyPathA { get; private set; }
-    private int targetPathIndexA = 0;
-    public float moveSpeedA = 1.0f;
-    public int valueA = 100;
+    ////a*
+    //[Header("Map Settings")]
+    //public AStar graphA;//tiles
+    //private TileA startTileA;
+    //private TileA endTileA;
+    ////enemy
+    //public GameObject enemyPrefabA;
+    //public TileA[] enemyPathA { get; private set; }
+    //private int targetPathIndexA = 0;
+    //public float moveSpeedA = 1.0f;
+    //public int valueA = 100;
 
 
     public Agent agent;
@@ -60,15 +60,15 @@ public class FiniteStateMachines : MonoBehaviour
     {
         playerHealth = player.GetComponent<PlayerHealth>();
 
-        //a* (spawns floor to find path )
-        int startIdxA = (graphA.gridHeight / 2) * graphA.gridWidth;//sets a new int at the start of the graph
-        int endIdxA = startIdxA + graphA.gridWidth - 1;//sets a new int at the end of the graph
+        ////a* (spawns floor to find path )
+        //int startIdxA = (graphA.gridHeight / 2) * graphA.gridWidth;//sets a new int at the start of the graph
+        //int endIdxA = startIdxA + graphA.gridWidth - 1;//sets a new int at the end of the graph
 
-        startTileA = graphA.tilesA[startIdxA];//sets startTile to the first tile using startIdx
-        endTileA = graphA.tilesA[endIdxA];//sets endTile to the last tile at the end of the graph using endIdx
+        //startTileA = graphA.tilesA[startIdxA];//sets startTile to the first tile using startIdx
+        //endTileA = graphA.tilesA[endIdxA];//sets endTile to the last tile at the end of the graph using endIdx
 
 
-        enemyPathA = graphA.CalculatePath(startTileA, endTileA);//uses CalculatePath function to make its way from enemy spawner to base/makes its way from startTile to endTile(startTile and endTile are used as start and end points)
+        //enemyPathA = graphA.CalculatePath(startTileA, endTileA);//uses CalculatePath function to make its way from enemy spawner to base/makes its way from startTile to endTile(startTile and endTile are used as start and end points)
 
 
     }
@@ -106,10 +106,10 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
 
         //finite state machines 
-        //agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
-        //agent.UpdateMovement();//updates movement changes
+        agent.velocity = (goalPos - curPos).normalized * speed;//gets the velocity of agent
+        agent.UpdateMovement();//updates movement changes
 
-        //agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
+        agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
         //navMesh
         //GetComponent<NavMeshAgent>().destination = waypoints[currentWaypointIndex].position;
@@ -117,16 +117,16 @@ public class FiniteStateMachines : MonoBehaviour
 
         //a*
         // if path complete, do nothing
-        
-        if (targetPathIndexA == enemyPathA.Length) { return; }
 
-        agent.velocity = (enemyPathA[targetPathIndexA].transform.position - agent.transform.position).normalized * moveSpeedA;
-        agent.UpdateMovement();
+        //if (targetPathIndexA == enemyPathA.Length) { return; }
 
-        if (Vector3.Distance(agent.transform.position, enemyPathA[targetPathIndexA].transform.position) < 0.3f)
-        {
-            ++targetPathIndexA;
-        }
+        //agent.velocity = (enemyPathA[targetPathIndexA].transform.position - agent.transform.position).normalized * moveSpeedA;
+        //agent.UpdateMovement();
+
+        //if (Vector3.Distance(agent.transform.position, enemyPathA[targetPathIndexA].transform.position) < 0.3f)
+        //{
+        //    ++targetPathIndexA;
+        //}
 
 
         //finite state machines
