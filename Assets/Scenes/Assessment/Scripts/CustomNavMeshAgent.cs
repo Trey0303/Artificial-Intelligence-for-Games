@@ -15,6 +15,8 @@ public class CustomNavMeshAgent : MonoBehaviour
 
     public bool shouldControlAgent = true;
 
+    public Vector3 destination { get; private set; }
+
     private void Start()
     {
         currentPath = new NavMeshPath();
@@ -42,8 +44,14 @@ public class CustomNavMeshAgent : MonoBehaviour
         }
     }
 
-    public void SetDestination(Vector3 destination)
+    public void SetDestination(Vector3 newDestination)
     {
-        NavMesh.CalculatePath(agent.transform.position, destination, NavMesh.AllAreas, currentPath);
+        if (destination != newDestination || currentPath.corners.Length == 0)//if destination is not the same or if there are no corners calculated
+        {
+            //calculate/recalculate
+            currentPathIndex = 0;
+            NavMesh.CalculatePath(agent.transform.position, newDestination, NavMesh.AllAreas, currentPath);
+            destination = newDestination;
+        }
     }
 }

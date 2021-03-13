@@ -42,8 +42,8 @@ public class FiniteStateMachines : MonoBehaviour
 
     [SerializeField]
     private Transform seekTarget;
-    public float detectionRadius = 2.0f;
-    public float giveupRadius = 5.0f;
+    public float detectionRadius = 3.0f;
+    public float giveupRadius = 6.0f;
     public float attackRadius = 1.5f;
 
     private void Start()
@@ -92,7 +92,14 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
 
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
-        navAgent.SetDestination(goalPos);
+
+        elapsed += Time.deltaTime;
+        if (elapsed > 0.5f)
+        {
+            elapsed -= 0.5f;//set elapsed back to 0.0f
+            navAgent.SetDestination(goalPos);
+
+        }
 
         if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
@@ -117,22 +124,17 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 curPos = agent.transform.position;
         Vector3 goalPos = seekTarget.transform.position;
 
-        agent.velocity = (goalPos - curPos).normalized * speed;
-
-        agent.UpdateMovement();
-
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
 
         //navMesh
-        //update every second.
+        //update every second or .seconds
         elapsed += Time.deltaTime;
         if (elapsed > 0.5f)
         {
-            elapsed -= 0.7f;//set elapsed back to 0.0f
+            elapsed -= 0.5f;//set elapsed back to 0.0f
             navAgent.SetDestination(goalPos);
 
         }
-        
 
         //have we lost our target?
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
