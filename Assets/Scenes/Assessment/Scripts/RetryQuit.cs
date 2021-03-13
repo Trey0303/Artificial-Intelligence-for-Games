@@ -12,4 +12,10 @@ public class RetryQuit : MonoBehaviour
         FiniteStateMachines.gameOver = false;
     }
 
+    //quit game
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
 }
