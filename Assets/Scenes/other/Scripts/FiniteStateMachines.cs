@@ -13,9 +13,7 @@ public class FiniteStateMachines : MonoBehaviour
     public static bool gameOver = false;
 
     //navMesh
-    private NavMeshPath path;
-    private int currentCornerIndex;
-    public float cornerReachedThreshold = 1.0f;
+    public CustomNavMeshAgent navAgent;
 
     public float speed = 3.0f;
     public float maxForce = 5.0f;
@@ -51,9 +49,6 @@ public class FiniteStateMachines : MonoBehaviour
     private void Start()
     {
         playerHealth = player.GetComponent<PlayerHealth>();
-
-        //navMesh Pathfinding
-        path = new NavMeshPath();
 
         elapsed = 0.0f;
 
@@ -96,44 +91,23 @@ public class FiniteStateMachines : MonoBehaviour
         Vector3 curPos = agent.transform.position;//get agent current position
         Vector3 goalPos = waypoints[currentWaypointIndex].position;//where you want to go
 
-
-
-        //reached the end of the path
-        while (currentCornerIndex < path.corners.Length)
-        {
-            ++currentCornerIndex;//move on to next corner
-            agent.velocity = (path.corners[currentCornerIndex] - curPos).normalized * speed;//gets the velocity of agent
-            agent.UpdateMovement();//updates movement changes
-        }
-
         agent.transform.forward = (goalPos - curPos).normalized;//to change where the enemy is facing visually
-
-        for (int i = 0; i < path.corners.Length - 1; i++)
-        {
-            Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-        }
+        navAgent.SetDestination(goalPos);
 
         if ((goalPos - agent.transform.position).magnitude < waypointReachedThreshold)//if goalPos - agent.transform.position is less than waypointReachedThreshold(1.0f)
         {
+            ++currentWaypointIndex;
 
-            //navMesh
-            //visually shows target corners
-            for (int i = 0; i < path.corners.Length - 1; i++)
-            {
-                Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-            }
             if (currentWaypointIndex >= waypoints.Length)
             {
                 currentWaypointIndex = 0;
-                currentCornerIndex = 0;//set cornerIndex back to zero
             }
 
         }
         //have we noticed out target?
         if((seekTarget.position - agent.transform.position).magnitude < detectionRadius){//if less than 2.0f radius
-            curPos = agent.transform.position;
             goalPos = seekTarget.transform.position;
-            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
+            navAgent.SetDestination(goalPos);
             currentState = States.Seek;
 
         }
@@ -152,23 +126,19 @@ public class FiniteStateMachines : MonoBehaviour
         //navMesh
         //update every second.
         elapsed += Time.deltaTime;
-        if (elapsed > 1.0f)
+        if (elapsed > 0.5f)
         {
-            elapsed -= 1.0f;//set elapsed back to 0.0f
-            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
+            elapsed -= 0.7f;//set elapsed back to 0.0f
+            navAgent.SetDestination(goalPos);
 
         }
-        //visually shows target corners
-        for (int i = 0; i < path.corners.Length - 1; i++)
-        {
-            Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-        }
+        
 
         //have we lost our target?
         if ((seekTarget.position - agent.transform.position).magnitude > giveupRadius)//if greater than giveup radius
         {
-            goalPos = waypoints[currentWaypointIndex].position;//where you want to go
-            NavMesh.CalculatePath(curPos, goalPos, NavMesh.AllAreas, path);//calculate/re-calculate target path
+            goalPos = waypoints[currentWaypointIndex].position;//Update goal position to patrol goalPos
+            navAgent.SetDestination(goalPos);
             currentState = States.Patrol;
         }
         else if ((seekTarget.position - agent.transform.position).magnitude < attackRadius)//if in attack radius
